@@ -1,0 +1,14 @@
+{
+  "Metadata": {
+    "title": "AssetFlow",
+    "description": "د سازماني شتمنيو د مدیریت پلیټفارم"
+  },
+  "HomePage": {
+    "title": "د AssetFlow بنسټ",
+    "description": "ترتیب، څو ژبې، او د ډیزاین توکنونه چمتو دي. د ځانګړتیاو پاڼې به راتلونکي پړاو کې راشي.",
+    "localeLabel": "اوسنۍ ژبه"
+  },
+  "Common": {
+    "appName": "AssetFlow"
+  }
+}

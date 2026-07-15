@@ -1,0 +1,14 @@
+{
+  "Metadata": {
+    "title": "AssetFlow",
+    "description": "Enterprise asset management platform"
+  },
+  "HomePage": {
+    "title": "AssetFlow Foundation",
+    "description": "Config, i18n, and design tokens are ready. Feature screens come next.",
+    "localeLabel": "Current locale"
+  },
+  "Common": {
+    "appName": "AssetFlow"
+  }
+}

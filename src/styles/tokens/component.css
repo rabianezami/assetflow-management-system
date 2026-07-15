@@ -1,0 +1,10 @@
+/* Component layout tokens */
+:root {
+  --sidebar-width: 16rem;
+  --sidebar-width-collapsed: 4rem;
+  --header-height: 3.5rem;
+  --content-max-width: 80rem;
+  --page-padding-x: 1.5rem;
+  --page-padding-y: 1.5rem;
+  --radius: 0.625rem;
+}

@@ -1,0 +1,44 @@
+/* Dark theme — shadcn semantic mappings */
+.dark {
+  --background: var(--surface-page);
+  --foreground: var(--text-primary);
+
+  --card: var(--surface-elevated);
+  --card-foreground: var(--text-primary);
+
+  --popover: var(--surface-elevated);
+  --popover-foreground: var(--text-primary);
+
+  --primary: var(--brand-primary);
+  --primary-foreground: var(--brand-primary-foreground);
+
+  --secondary: var(--brand-secondary);
+  --secondary-foreground: var(--brand-secondary-foreground);
+
+  --muted: var(--surface-sunken);
+  --muted-foreground: var(--text-secondary);
+
+  --accent: var(--surface-sunken);
+  --accent-foreground: var(--text-primary);
+
+  --destructive: var(--status-error);
+
+  --border: var(--border-default);
+  --input: var(--border-default);
+  --ring: var(--brand-accent);
+
+  --chart-1: oklch(0.72 0.16 var(--brand-hue));
+  --chart-2: oklch(0.72 0.14 145);
+  --chart-3: oklch(0.78 0.12 75);
+  --chart-4: oklch(0.68 0.12 320);
+  --chart-5: oklch(0.72 0.1 200);
+
+  --sidebar: var(--surface-elevated);
+  --sidebar-foreground: var(--text-primary);
+  --sidebar-primary: var(--brand-primary);
+  --sidebar-primary-foreground: var(--brand-primary-foreground);
+  --sidebar-accent: var(--surface-sunken);
+  --sidebar-accent-foreground: var(--text-primary);
+  --sidebar-border: var(--border-default);
+  --sidebar-ring: var(--brand-accent);
+}
