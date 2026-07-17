@@ -48,7 +48,7 @@ The first version focuses on the core asset management workflow:
 ## Future Improvements
 
 Future versions may include:
-
+- Admin dashboard for managing users, organizations, permissions, and system settings
 - Role-based permissions
 - Organization management
 - Advanced reporting
