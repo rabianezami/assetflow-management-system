@@ -18,7 +18,7 @@ Every package and app is written in TypeScript.
 
 ### Docs
 
-- `docs/` — internal documentation (Markdown). See [`docs/monorepo.md`](docs/monorepo.md).
+- `docs/` — internal documentation (Markdown). See [`docs/architecture.md`](docs/architecture.md).
 
 ## Prerequisites
 
