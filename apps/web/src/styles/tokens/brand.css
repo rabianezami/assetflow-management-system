@@ -1,0 +1,22 @@
+/* Brand tokens — change --brand-hue to rebrand the entire product */
+:root {
+  --brand-hue: 264;
+
+  --brand-primary: oklch(0.45 0.18 var(--brand-hue));
+  --brand-primary-hover: oklch(0.4 0.18 var(--brand-hue));
+  --brand-primary-foreground: oklch(0.99 0 0);
+  --brand-accent: oklch(0.55 0.12 var(--brand-hue));
+
+  --brand-secondary: oklch(0.96 0.005 var(--brand-hue));
+  --brand-secondary-foreground: oklch(0.25 0.02 var(--brand-hue));
+}
+
+.dark {
+  --brand-primary: oklch(0.62 0.18 var(--brand-hue));
+  --brand-primary-hover: oklch(0.67 0.18 var(--brand-hue));
+  --brand-primary-foreground: oklch(0.99 0 0);
+  --brand-accent: oklch(0.58 0.14 var(--brand-hue));
+
+  --brand-secondary: oklch(0.28 0.02 var(--brand-hue));
+  --brand-secondary-foreground: oklch(0.95 0.005 var(--brand-hue));
+}

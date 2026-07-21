@@ -1,0 +1,18 @@
+{
+  "Metadata": {
+    "title": "AssetFlow",
+    "description": "سامانه مدیریت دارایی سازمانی"
+  },
+  "HomePage": {
+    "title": "پایه AssetFlow",
+    "description": "پیکربندی، چندزبانه‌سازی و توکن‌های طراحی آماده است. صفحات ویژگی در مرحله بعد.",
+    "localeLabel": "زبان فعلی"
+  },
+  "Theme": {
+    "toLight": "تغییر به پوسته روشن",
+    "toDark": "تغییر به پوسته تاریک"
+  },
+  "Common": {
+    "appName": "AssetFlow"
+  }
+}
