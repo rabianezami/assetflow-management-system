@@ -12,6 +12,20 @@
     "toLight": "روښانه تهه ته بدل کړئ",
     "toDark": "تیاره تهه ته بدل کړئ"
   },
+  "Locale": {
+    "switch": "ژبه بدل کړئ"
+  },
+  "Navigation": {
+    "main": "اصلي نیویګیشن",
+    "home": "کور",
+    "dashboard": "ډشبورډ",
+    "collapse": "اړخ پټه جمع کړئ"
+  },
+  "Status": {
+    "active": "فعال",
+    "assigned": "ټاکل شوی",
+    "maintenance": "ساتنه"
+  },
   "Common": {
     "appName": "AssetFlow"
   }
