@@ -1,11 +1,10 @@
 import { Geist, Geist_Mono, Noto_Sans_Arabic, Vazirmatn } from "next/font/google";
-import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { hasLocale } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import type { CSSProperties } from "react";
 
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import { ThemeScript } from "@/components/theme-script";
+import { Providers } from "@/components/layout/providers";
 import { isRtlLocale } from "@/i18n/config";
 import { routing } from "@/i18n/routing";
 
@@ -79,12 +78,9 @@ export default async function LocaleLayout({ children, params }: Props) {
       style={fontSansStyle}
     >
       <body className="flex min-h-full flex-col">
-        <ThemeScript />
-        <ThemeProvider>
-          <NextIntlClientProvider messages={messages}>
-            {children}
-          </NextIntlClientProvider>
-        </ThemeProvider>
+        <Providers locale={locale} messages={messages}>
+          {children}
+        </Providers>
       </body>
     </html>
   );
