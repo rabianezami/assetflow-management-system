@@ -1,9 +1,12 @@
-export type NavItem = {
+import { LayoutDashboard, type LucideIcon } from "lucide-react";
+
+export type DashboardNavItem = {
   href: string;
-  labelKey: "home" | "dashboard";
+  labelKey: "dashboard";
+  icon: LucideIcon;
 };
 
-export const mainNavItems: NavItem[] = [
-  { href: "/", labelKey: "home" },
-  { href: "/dashboard", labelKey: "dashboard" },
+/** App-shell nav only — marketing routes stay out of the dashboard chrome. */
+export const dashboardNavItems: DashboardNavItem[] = [
+  { href: "/dashboard", labelKey: "dashboard", icon: LayoutDashboard },
 ];

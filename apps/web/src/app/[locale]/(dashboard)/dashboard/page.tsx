@@ -1,13 +1,10 @@
-import { hasLocale } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { notFound } from "next/navigation";
 import { LayoutDashboard } from "lucide-react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { EmptyState } from "@/components/common/empty-state";
 import { PageHeader } from "@/components/common/page-header";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
-import { routing } from "@/i18n/routing";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -15,11 +12,6 @@ type Props = {
 
 export default async function DashboardPage({ params }: Props) {
   const { locale } = await params;
-
-  if (!hasLocale(routing.locales, locale)) {
-    notFound();
-  }
-
   setRequestLocale(locale);
 
   const t = await getTranslations("Dashboard");
@@ -32,7 +24,11 @@ export default async function DashboardPage({ params }: Props) {
         title={t("emptyTitle")}
         description={t("emptyDescription")}
         action={
-          <Button nativeButton={false} render={<Link href="/" />} variant="outline">
+          <Button
+            nativeButton={false}
+            render={<Link href="/" />}
+            variant="outline"
+          >
             {t("backHome")}
           </Button>
         }
