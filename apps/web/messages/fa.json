@@ -28,5 +28,28 @@
   },
   "Common": {
     "appName": "AssetFlow"
+  },
+  "Marketing": {
+    "goToDashboard": "رفتن به داشبورد",
+    "goToLogin": "ورود"
+  },
+  "Auth": {
+    "loginTitle": "ورود",
+    "loginDescription": "احراز هویت در فاز بعدی پیاده‌سازی می‌شود. این یک placeholder چیدمان است.",
+    "continuePlaceholder": "ادامه به داشبورد",
+    "backHome": "بازگشت به خانه"
+  },
+  "Dashboard": {
+    "title": "داشبورد",
+    "description": "نمای کلی از دارایی‌ها و عملیات سازمان شما.",
+    "emptyTitle": "هنوز ویجت داشبورد وجود ندارد",
+    "emptyDescription": "ماژول‌های ویژگی این بخش را در فازهای بعد پر می‌کنند.",
+    "backHome": "بازگشت به خانه"
+  },
+  "Admin": {
+    "title": "مدیریت پلتفرم",
+    "description": "برای مدیریت سطح پلتفرم رزرو شده است.",
+    "layoutNotice": "گروه مسیر ادمین (stub) — جدا از پوسته داشبورد مستأجر.",
+    "backToDashboard": "بازگشت به داشبورد"
   }
 }

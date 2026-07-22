@@ -28,5 +28,28 @@
   },
   "Common": {
     "appName": "AssetFlow"
+  },
+  "Marketing": {
+    "goToDashboard": "Open dashboard",
+    "goToLogin": "Sign in"
+  },
+  "Auth": {
+    "loginTitle": "Sign in",
+    "loginDescription": "Authentication will be wired in a later phase. This is a layout placeholder.",
+    "continuePlaceholder": "Continue to dashboard",
+    "backHome": "Back to home"
+  },
+  "Dashboard": {
+    "title": "Dashboard",
+    "description": "Overview of your organization assets and operations.",
+    "emptyTitle": "No dashboard widgets yet",
+    "emptyDescription": "Feature modules will populate this area in upcoming phases.",
+    "backHome": "Back to home"
+  },
+  "Admin": {
+    "title": "Platform admin",
+    "description": "Reserved for platform-level administration.",
+    "layoutNotice": "Admin route group (stub) — separate from the tenant dashboard shell.",
+    "backToDashboard": "Back to dashboard"
   }
 }

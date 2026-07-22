@@ -6,14 +6,16 @@ import { LocaleSwitcher } from "@/components/common/locale-switcher";
 import { PageHeader } from "@/components/common/page-header";
 import { StatusBadge } from "@/components/common/status-badge";
 import { ThemeToggle } from "@/components/common/theme-toggle";
+import { Button } from "@/components/ui/button";
 import { localeNames } from "@/i18n/config";
+import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
-export default async function HomePage({ params }: Props) {
+export default async function MarketingPage({ params }: Props) {
   const { locale } = await params;
 
   if (!hasLocale(routing.locales, locale)) {
@@ -26,9 +28,10 @@ export default async function HomePage({ params }: Props) {
   const tTheme = await getTranslations("Theme");
   const tLocale = await getTranslations("Locale");
   const tStatus = await getTranslations("Status");
+  const tMarketing = await getTranslations("Marketing");
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center bg-background px-6 py-16">
+    <div className="flex flex-1 flex-col items-center justify-center px-6 py-16">
       <main className="flex w-full max-w-2xl flex-col gap-8 rounded-xl border border-border bg-card p-8 shadow-sm">
         <PageHeader
           title={t("title")}
@@ -49,6 +52,19 @@ export default async function HomePage({ params }: Props) {
           <StatusBadge status="active" label={tStatus("active")} />
           <StatusBadge status="assigned" label={tStatus("assigned")} />
           <StatusBadge status="maintenance" label={tStatus("maintenance")} />
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <Button nativeButton={false} render={<Link href="/dashboard" />}>
+            {tMarketing("goToDashboard")}
+          </Button>
+          <Button
+            nativeButton={false}
+            render={<Link href="/login" />}
+            variant="outline"
+          >
+            {tMarketing("goToLogin")}
+          </Button>
         </div>
 
         <LocaleSwitcher label={tLocale("switch")} pathname="/" />

@@ -3,4 +3,7 @@ export type NavItem = {
   labelKey: "home" | "dashboard";
 };
 
-export const mainNavItems: NavItem[] = [{ href: "/", labelKey: "home" }];
+export const mainNavItems: NavItem[] = [
+  { href: "/", labelKey: "home" },
+  { href: "/dashboard", labelKey: "dashboard" },
+];
