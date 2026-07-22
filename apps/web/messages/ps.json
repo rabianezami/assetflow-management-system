@@ -17,7 +17,6 @@
   },
   "Navigation": {
     "main": "اصلي نیویګیشن",
-    "home": "کور",
     "dashboard": "ډشبورډ",
     "collapse": "اړخ پټه جمع کړئ"
   },
@@ -28,5 +27,28 @@
   },
   "Common": {
     "appName": "AssetFlow"
+  },
+  "Marketing": {
+    "goToDashboard": "ډشبورډ خلاص کړئ",
+    "goToLogin": "ننوتل"
+  },
+  "Auth": {
+    "loginTitle": "ننوتل",
+    "loginDescription": "تصدیق به راتلونکي پړاو کې پلي کیږي. دا د layout placeholder دی.",
+    "continuePlaceholder": "ډشبورډ ته دوام ورکړئ",
+    "backHome": "کور ته بیرته"
+  },
+  "Dashboard": {
+    "title": "ډشبورډ",
+    "description": "ستاسو د سازمان شتمنیو او عملیاتو عمومي کتنه.",
+    "emptyTitle": "تر اوسه د ډشبورډ ویجټونه نشته",
+    "emptyDescription": "د ځانګړتیاو ماډلونه به دا برخه په راتلونکو پړاوونو کې ډک کړي.",
+    "backHome": "کور ته بیرته"
+  },
+  "Admin": {
+    "title": "د پلیټفارم ادمین",
+    "description": "د پلیټفارم کچې administracion لپاره ساتل شوی.",
+    "layoutNotice": "د ادمین route group (stub) — د tenant dashboard shell څخه جلا.",
+    "backToDashboard": "ډشبورډ ته بیرته"
   }
 }

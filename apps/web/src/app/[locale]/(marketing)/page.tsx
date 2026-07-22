@@ -1,48 +1,36 @@
-import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { notFound } from "next/navigation";
 
 import { LocaleSwitcher } from "@/components/common/locale-switcher";
 import { PageHeader } from "@/components/common/page-header";
 import { StatusBadge } from "@/components/common/status-badge";
 import { ThemeToggle } from "@/components/common/theme-toggle";
-import { localeNames } from "@/i18n/config";
-import { routing } from "@/i18n/routing";
+import { Button } from "@/components/ui/button";
+import { localeNames, type Locale } from "@/i18n/config";
+import { Link } from "@/i18n/navigation";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
-export default async function HomePage({ params }: Props) {
+export default async function MarketingPage({ params }: Props) {
   const { locale } = await params;
-
-  if (!hasLocale(routing.locales, locale)) {
-    notFound();
-  }
-
   setRequestLocale(locale);
 
   const t = await getTranslations("HomePage");
-  const tTheme = await getTranslations("Theme");
-  const tLocale = await getTranslations("Locale");
   const tStatus = await getTranslations("Status");
+  const tMarketing = await getTranslations("Marketing");
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center bg-background px-6 py-16">
+    <div className="flex min-h-svh flex-1 flex-col items-center justify-center px-6 py-16">
       <main className="flex w-full max-w-2xl flex-col gap-8 rounded-xl border border-border bg-card p-8 shadow-sm">
         <PageHeader
           title={t("title")}
           description={t("description")}
-          actions={
-            <ThemeToggle
-              labelToLight={tTheme("toLight")}
-              labelToDark={tTheme("toDark")}
-            />
-          }
+          actions={<ThemeToggle />}
         />
 
         <p className="text-caption tracking-wide text-muted-foreground uppercase">
-          {t("localeLabel")}: {localeNames[locale]}
+          {t("localeLabel")}: {localeNames[locale as Locale]}
         </p>
 
         <div className="flex flex-wrap gap-2">
@@ -51,7 +39,20 @@ export default async function HomePage({ params }: Props) {
           <StatusBadge status="maintenance" label={tStatus("maintenance")} />
         </div>
 
-        <LocaleSwitcher label={tLocale("switch")} pathname="/" />
+        <div className="flex flex-wrap gap-2">
+          <Button nativeButton={false} render={<Link href="/dashboard" />}>
+            {tMarketing("goToDashboard")}
+          </Button>
+          <Button
+            nativeButton={false}
+            render={<Link href="/login" />}
+            variant="outline"
+          >
+            {tMarketing("goToLogin")}
+          </Button>
+        </div>
+
+        <LocaleSwitcher />
       </main>
     </div>
   );

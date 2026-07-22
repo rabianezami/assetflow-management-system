@@ -1,16 +1,13 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/theme/store";
 
-type ThemeToggleProps = {
-  labelToLight: string;
-  labelToDark: string;
-};
-
-export function ThemeToggle({ labelToLight, labelToDark }: ThemeToggleProps) {
+export function ThemeToggle() {
+  const t = useTranslations("Theme");
   const { resolvedTheme, setTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
 
@@ -19,7 +16,7 @@ export function ThemeToggle({ labelToLight, labelToDark }: ThemeToggleProps) {
       variant="outline"
       size="icon"
       className="relative"
-      aria-label={isDark ? labelToLight : labelToDark}
+      aria-label={isDark ? t("toLight") : t("toDark")}
       onClick={() => setTheme(isDark ? "light" : "dark")}
     >
       <Sun className="size-4 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
