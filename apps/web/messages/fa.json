@@ -12,6 +12,20 @@
     "toLight": "تغییر به پوسته روشن",
     "toDark": "تغییر به پوسته تاریک"
   },
+  "Locale": {
+    "switch": "تغییر زبان"
+  },
+  "Navigation": {
+    "main": "ناوبری اصلی",
+    "home": "خانه",
+    "dashboard": "داشبورد",
+    "collapse": "جمع کردن نوار کناری"
+  },
+  "Status": {
+    "active": "فعال",
+    "assigned": "اختصاص‌یافته",
+    "maintenance": "در تعمیر"
+  },
   "Common": {
     "appName": "AssetFlow"
   }

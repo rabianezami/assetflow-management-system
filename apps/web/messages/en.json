@@ -12,6 +12,20 @@
     "toLight": "Switch to light theme",
     "toDark": "Switch to dark theme"
   },
+  "Locale": {
+    "switch": "Switch language"
+  },
+  "Navigation": {
+    "main": "Main navigation",
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "collapse": "Collapse sidebar"
+  },
+  "Status": {
+    "active": "Active",
+    "assigned": "Assigned",
+    "maintenance": "Maintenance"
+  },
   "Common": {
     "appName": "AssetFlow"
   }
