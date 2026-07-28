@@ -18,12 +18,162 @@
   "Navigation": {
     "main": "ناوبری اصلی",
     "dashboard": "داشبورد",
+    "assets": "دارایی‌ها",
     "collapse": "جمع کردن نوار کناری"
   },
   "Status": {
     "active": "فعال",
     "assigned": "اختصاص‌یافته",
-    "maintenance": "در تعمیر"
+    "maintenance": "در تعمیر",
+    "retired": "از رده خارج",
+    "error": "غیرفعال"
+  },
+  "Assets": {
+    "title": "دارایی‌ها",
+    "settingsButton": "تنظیمات",
+    "addAsset": "افزودن دارایی",
+    "searchPlaceholder": "جستجو",
+    "addFilter": "افزودن فیلتر",
+    "columnSettings": "تنظیمات ستون‌ها",
+    "emptyTableTitle": "هنوز دارایی‌ای ثبت نشده",
+    "emptyTableDescription": "اولین دارایی را اضافه کنید تا ردیابی تجهیزات سازمان را آغاز کنید.",
+    "noFilterResults": "دارایی‌ای با این فیلترها یافت نشد",
+    "viewArchived": "مشاهده بایگانی",
+    "kpi": {
+      "totalAssets": "کل دارایی‌ها",
+      "openActions": "اقدامات باز",
+      "inspectionsLast30Days": "بازرسی‌های ۳۰ روز گذشته"
+    },
+    "filters": {
+      "type": "نوع دارایی",
+      "status": "وضعیت",
+      "allTypes": "همه انواع",
+      "allStatuses": "همه وضعیت‌ها",
+      "clear": "پاک کردن فیلترها"
+    },
+    "columns": {
+      "uniqueId": "شناسه یکتا",
+      "displayName": "نام نمایشی",
+      "type": "نوع",
+      "status": "وضعیت",
+      "lastInspection": "آخرین بازرسی",
+      "openActions": "اقدامات باز",
+      "actions": "عملیات"
+    },
+    "moduleNav": {
+      "label": "ماژول‌های دارایی",
+      "assets": "دارایی‌ها",
+      "maintenance": "نگهداری",
+      "utilization": "بهره‌وری",
+      "liveMap": "نقشه زنده",
+      "eventHistory": "تاریخچه رویداد",
+      "archive": "بایگانی",
+      "sendFeedback": "ارسال بازخورد"
+    },
+    "onboarding": {
+      "title": "شروع کار با دارایی‌ها",
+      "description": "این مراحل را برای راه‌اندازی مدیریت دارایی تکمیل کنید.",
+      "stepTypes": "ایجاد انواع دارایی",
+      "stepAssets": "افزودن دارایی‌ها",
+      "start": "شروع",
+      "dismiss": "بستن"
+    },
+    "add": {
+      "title": "افزودن دارایی",
+      "cancel": "لغو",
+      "noTypesTitle": "هنوز نوع دارایی ایجاد نشده",
+      "noTypesDescription": "قبل از افزودن دارایی باید نوع دارایی ایجاد کنید. از انواع برای دسته‌بندی دارایی‌ها استفاده کنید.",
+      "createTypeCta": "+ ایجاد نوع",
+      "type": "نوع",
+      "uniqueId": "شناسه یکتا",
+      "displayName": "نام نمایشی",
+      "status": "وضعیت",
+      "site": "سایت",
+      "sitePlaceholder": "انتخاب سایت",
+      "selectType": "انتخاب نوع دارایی",
+      "photoLabel": "عکس دارایی را اینجا بکشید یا",
+      "browse": "مرور",
+      "required": "الزامی",
+      "save": "ذخیره"
+    },
+    "edit": {
+      "title": "ویرایش دارایی",
+      "save": "ذخیره تغییرات",
+      "duplicateUniqueId": "دارایی فعال دیگری با این شناسه یکتا وجود دارد."
+    },
+    "archived": {
+      "title": "دارایی‌های بایگانی‌شده",
+      "description": "دارایی‌هایی که از فهرست فعال حذف شده‌اند. برای نمایش مجدد، بازیابی کنید.",
+      "backToAssets": "بازگشت به دارایی‌ها",
+      "emptyTitle": "دارایی بایگانی‌شده‌ای نیست",
+      "emptyDescription": "دارایی‌های بایگانی‌شده اینجا نمایش داده می‌شوند.",
+      "restore": "بازیابی",
+      "archivedBadge": "بایگانی‌شده"
+    },
+    "settings": {
+      "title": "تنظیمات دارایی",
+      "backToAssets": "بازگشت به دارایی‌ها",
+      "tabsLabel": "بخش‌های تنظیمات",
+      "types": {
+        "tab": "انواع",
+        "manageTitle": "مدیریت انواع",
+        "createType": "+ ایجاد نوع",
+        "emptyTitle": "نوع دارایی وجود ندارد",
+        "emptyDescription": "قبل از افزودن دارایی، انواع دارایی برای سازمان خود ایجاد کنید.",
+        "createModalTitle": "ایجاد نوع جدید",
+        "typeName": "نام نوع",
+        "typeNamePlaceholder": "نام نوع را وارد کنید",
+        "statusGroup": "گروه وضعیت",
+        "statusGroupPlaceholder": "بدون گروه وضعیت",
+        "cancel": "لغو",
+        "create": "ایجاد",
+        "save": "ذخیره تغییرات",
+        "edit": "ویرایش",
+        "delete": "حذف",
+        "deleteBlocked": "نوعی که دارایی به آن اختصاص دارد قابل حذف نیست. ابتدا دارایی‌ها را منتقل یا بایگانی کنید.",
+        "editModalTitle": "ویرایش نوع",
+        "columns": {
+          "name": "نام نوع",
+          "statusGroup": "گروه وضعیت",
+          "assetCount": "دارایی‌ها",
+          "actions": "عملیات"
+        }
+      }
+    },
+    "detail": {
+      "breadcrumb": "بازگشت به دارایی‌ها",
+      "edit": "ویرایش",
+      "archive": "بایگانی",
+      "restore": "بازیابی",
+      "archivedNotice": "این دارایی بایگانی شده و در فهرست فعال نمایش داده نمی‌شود.",
+      "changeStatus": "تغییر وضعیت",
+      "notFoundTitle": "دارایی یافت نشد",
+      "notFoundDescription": "این دارایی حذف شده یا لینک نامعتبر است.",
+      "backToList": "بازگشت به دارایی‌ها",
+      "tabs": {
+        "overview": "نمای کلی",
+        "details": "جزئیات"
+      },
+      "overview": {
+        "location": "موقعیت",
+        "summary": "فعالیت",
+        "locationEmptyTitle": "موقعیت در دسترس نیست",
+        "locationEmptyDescription": "موقعیت دارایی پس از فعال‌سازی سایت یا نقشه نمایش داده می‌شود.",
+        "activityEmptyTitle": "فعالیتی ثبت نشده",
+        "activityEmptyDescription": "بازرسی‌ها و اقدامات مرتبط با این دارایی اینجا نمایش داده می‌شوند."
+      },
+      "details": {
+        "summary": "خلاصه",
+        "status": "وضعیت"
+      },
+      "fields": {
+        "uniqueId": "شناسه یکتا",
+        "displayName": "نام نمایشی",
+        "type": "نوع",
+        "site": "سایت",
+        "status": "وضعیت"
+      }
+    }
   },
   "Common": {
     "appName": "AssetFlow"
