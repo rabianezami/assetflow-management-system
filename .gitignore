@@ -45,3 +45,5 @@ next-env.d.ts
 
 # Cursor local rules
 .cursor/
+
+docs/mvp-scope.md
