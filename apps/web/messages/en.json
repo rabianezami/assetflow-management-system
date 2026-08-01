@@ -83,7 +83,8 @@
       "photoLabel": "Drag asset profile photo here or",
       "browse": "browse",
       "required": "required",
-      "save": "Save"
+      "save": "Save",
+      "duplicateUniqueId": "Another active asset already uses this unique ID."
     },
     "edit": {
       "title": "Edit asset",

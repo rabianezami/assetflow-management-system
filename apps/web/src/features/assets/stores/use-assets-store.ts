@@ -3,6 +3,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import {
+  findAssetById,
+  hasDuplicateActiveUniqueId,
+  isArchivedLifecycle,
+} from "@/features/assets/lib/asset-helpers";
 import type {
   Asset,
   AssetStatus,
@@ -21,15 +26,12 @@ type AssetsState = {
   addAssetType: (input: CreateAssetTypeInput) => AssetType;
   updateAssetType: (id: string, input: UpdateAssetTypeInput) => boolean;
   deleteAssetType: (id: string) => { ok: true } | { ok: false; reason: "in_use" };
-  addAsset: (input: CreateAssetInput) => Asset;
+  addAsset: (input: CreateAssetInput) => Asset | null;
   updateAsset: (id: string, input: UpdateAssetInput) => boolean;
   updateAssetStatus: (id: string, status: AssetStatus) => boolean;
   archiveAsset: (id: string) => boolean;
   restoreAsset: (id: string) => boolean;
-  getAssetById: (id: string) => Asset | undefined;
   getTypeById: (id: string) => AssetType | undefined;
-  getActiveAssets: () => Asset[];
-  getArchivedAssets: () => Asset[];
   countAssetsByTypeId: (typeId: string) => number;
   dismissOnboarding: () => void;
 };
@@ -87,10 +89,15 @@ export const useAssetsStore = create<AssetsState>()(
       },
 
       addAsset: (input) => {
+        const trimmedId = input.uniqueId.trim();
+        if (hasDuplicateActiveUniqueId(get().assets, trimmedId)) {
+          return null;
+        }
+
         const now = new Date().toISOString();
         const asset: Asset = {
           id: generateId(),
-          uniqueId: input.uniqueId.trim(),
+          uniqueId: trimmedId,
           displayName: input.displayName?.trim() ?? "",
           typeId: input.typeId,
           status: input.status,
@@ -107,17 +114,13 @@ export const useAssetsStore = create<AssetsState>()(
       },
 
       updateAsset: (id, input) => {
-        const asset = get().getAssetById(id);
-        if (!asset || asset.lifecycle === "archived") return false;
+        const asset = findAssetById(get().assets, id);
+        if (!asset || isArchivedLifecycle(asset)) return false;
 
         const trimmedId = input.uniqueId.trim();
-        const duplicate = get().assets.some(
-          (a) =>
-            a.id !== id &&
-            a.lifecycle === "active" &&
-            a.uniqueId.toLowerCase() === trimmedId.toLowerCase(),
-        );
-        if (duplicate) return false;
+        if (hasDuplicateActiveUniqueId(get().assets, trimmedId, id)) {
+          return false;
+        }
 
         set((state) => ({
           assets: state.assets.map((a) =>
@@ -138,8 +141,8 @@ export const useAssetsStore = create<AssetsState>()(
       },
 
       updateAssetStatus: (id, status) => {
-        const asset = get().getAssetById(id);
-        if (!asset || asset.lifecycle === "archived") return false;
+        const asset = findAssetById(get().assets, id);
+        if (!asset || isArchivedLifecycle(asset)) return false;
         set((state) => ({
           assets: state.assets.map((a) =>
             a.id === id
@@ -151,8 +154,8 @@ export const useAssetsStore = create<AssetsState>()(
       },
 
       archiveAsset: (id) => {
-        const asset = get().getAssetById(id);
-        if (!asset || asset.lifecycle === "archived") return false;
+        const asset = findAssetById(get().assets, id);
+        if (!asset || isArchivedLifecycle(asset)) return false;
         const now = new Date().toISOString();
         set((state) => ({
           assets: state.assets.map((a) =>
@@ -165,16 +168,12 @@ export const useAssetsStore = create<AssetsState>()(
       },
 
       restoreAsset: (id) => {
-        const asset = get().getAssetById(id);
-        if (!asset || asset.lifecycle !== "archived") return false;
+        const asset = findAssetById(get().assets, id);
+        if (!asset || !isArchivedLifecycle(asset)) return false;
 
-        const duplicate = get().assets.some(
-          (a) =>
-            a.id !== id &&
-            a.lifecycle === "active" &&
-            a.uniqueId.toLowerCase() === asset.uniqueId.toLowerCase(),
-        );
-        if (duplicate) return false;
+        if (hasDuplicateActiveUniqueId(get().assets, asset.uniqueId, id)) {
+          return false;
+        }
 
         const now = new Date().toISOString();
         set((state) => ({
@@ -192,18 +191,7 @@ export const useAssetsStore = create<AssetsState>()(
         return true;
       },
 
-      getAssetById: (id) => {
-        const asset = get().assets.find((a) => a.id === id);
-        return asset ? normalizeAsset(asset) : undefined;
-      },
-
       getTypeById: (id) => get().assetTypes.find((t) => t.id === id),
-
-      getActiveAssets: () =>
-        normalizeAssets(get().assets).filter((a) => a.lifecycle === "active"),
-
-      getArchivedAssets: () =>
-        normalizeAssets(get().assets).filter((a) => a.lifecycle === "archived"),
 
       countAssetsByTypeId: (typeId) =>
         get().assets.filter((a) => a.typeId === typeId).length,
