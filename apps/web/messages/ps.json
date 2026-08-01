@@ -18,12 +18,163 @@
   "Navigation": {
     "main": "اصلي نیویګیشن",
     "dashboard": "ډشبورډ",
+    "assets": "شتمنۍ",
     "collapse": "اړخ پټه جمع کړئ"
   },
   "Status": {
     "active": "فعال",
     "assigned": "ټاکل شوی",
-    "maintenance": "ساتنه"
+    "maintenance": "ساتنه",
+    "retired": "غیرفعال شوی",
+    "error": "غیرفعال"
+  },
+  "Assets": {
+    "title": "شتمنۍ",
+    "settingsButton": "ترتیبات",
+    "addAsset": "شتمني اضافه کړئ",
+    "searchPlaceholder": "لټون",
+    "addFilter": "فیلتر اضافه کړئ",
+    "columnSettings": "د ستون تنظیمات",
+    "emptyTableTitle": "تر اوسه هیڅ شتمني نشته",
+    "emptyTableDescription": "خپله لومړۍ شتمني اضافه کړئ ترڅو د سازمان تجهیزات تعقیب پیل کړئ.",
+    "noFilterResults": "ستاسو فیلترونو سره هیڅ شتمني نه ده موندل شوې",
+    "viewArchived": "آرشیف وګورئ",
+    "kpi": {
+      "totalAssets": "ټولې شتمنۍ",
+      "openActions": "خلاصې کړنې",
+      "inspectionsLast30Days": "په تیرو ۳۰ ورځو کې معاینې"
+    },
+    "filters": {
+      "type": "د شتمنۍ ډول",
+      "status": "حالت",
+      "allTypes": "ټول ډولونه",
+      "allStatuses": "ټول حالتونه",
+      "clear": "فیلترونه پاک کړئ"
+    },
+    "columns": {
+      "uniqueId": "بېل پېژند",
+      "displayName": "ښکاره نوم",
+      "type": "ډول",
+      "status": "حالت",
+      "lastInspection": "وروستۍ معاینه",
+      "openActions": "خلاصې کړنې",
+      "actions": "کړنې"
+    },
+    "moduleNav": {
+      "label": "د شتمنۍ ماډلونه",
+      "assets": "شتمنۍ",
+      "maintenance": "ساتنه",
+      "utilization": "کارونه",
+      "liveMap": "ژوندی نقشه",
+      "eventHistory": "د پیښو تاریخچه",
+      "archive": "آرشیف",
+      "sendFeedback": "نظر واستوئ"
+    },
+    "onboarding": {
+      "title": "د شتمنیو سره پیل وکړئ",
+      "description": "د شتمنۍ مدیریت د پیل لپاره دا ګامونه بشپړ کړئ.",
+      "stepTypes": "د شتمنۍ ډولونه جوړ کړئ",
+      "stepAssets": "شتمنۍ اضافه کړئ",
+      "start": "پیل",
+      "dismiss": "بند کړئ"
+    },
+    "add": {
+      "title": "شتمني اضافه کړئ",
+      "cancel": "لغوه",
+      "noTypesTitle": "تر اوسه د شتمنۍ ډول نشته",
+      "noTypesDescription": "د شتمنۍ اضافه کولو دمخه باید د شتمنۍ ډول جوړ کړئ.",
+      "createTypeCta": "+ ډول جوړ کړئ",
+      "type": "ډول",
+      "uniqueId": "بېل پېژند",
+      "displayName": "ښکاره نوم",
+      "status": "حالت",
+      "site": "سایټ",
+      "sitePlaceholder": "سایټ وټاکئ",
+      "selectType": "د شتمنۍ ډول وټاکئ",
+      "photoLabel": "د شتمنۍ عکس دلته راکښئ یا",
+      "browse": "لټون",
+      "required": "اړین",
+      "save": "خوندي کړئ",
+      "duplicateUniqueId": "بل فعاله شتمني دغه بېل پېژند لري."
+    },
+    "edit": {
+      "title": "شتمني سمول",
+      "save": "بدلونونه خوندي کړئ",
+      "duplicateUniqueId": "بل فعاله شتمني دغه بېل پېژند لري."
+    },
+    "archived": {
+      "title": "آرشیف شوې شتمنۍ",
+      "description": "شتمنۍ چې له فعال لیست څخه لرې شوي. بیا ښکاره کولو لپاره بیرته راوګرځوئ.",
+      "backToAssets": "شتمنیو ته بیرته",
+      "emptyTitle": "هیڅ آرشیف شوې شتمني نشته",
+      "emptyDescription": "آرشیف شوې شتمنۍ به دلته ښکاره شي.",
+      "restore": "بیرته راوګرځول",
+      "archivedBadge": "آرشیف شوی"
+    },
+    "settings": {
+      "title": "د شتمنۍ ترتیبات",
+      "backToAssets": "شتمنیو ته بیرته",
+      "tabsLabel": "د ترتیباتو برخې",
+      "types": {
+        "tab": "ډولونه",
+        "manageTitle": "ډولونه مدیریت کړئ",
+        "createType": "+ ډول جوړ کړئ",
+        "emptyTitle": "د شتمنۍ ډول نشته",
+        "emptyDescription": "د شتمنۍ اضافه کولو دمخه د خپل سازمان لپاره ډولونه جوړ کړئ.",
+        "createModalTitle": "نوی ډول جوړ کړئ",
+        "typeName": "د ډول نوم",
+        "typeNamePlaceholder": "د ډول نوم ولیکئ",
+        "statusGroup": "د حالت ډله",
+        "statusGroupPlaceholder": "د حالت ډله نشته",
+        "cancel": "لغوه",
+        "create": "جوړ کړئ",
+        "save": "بدلونونه خوندي کړئ",
+        "edit": "سمول",
+        "delete": "حذف",
+        "deleteBlocked": "ډول چې شتمنۍ پکې دي نشي حذف کېدای. لومړی شتمنۍ لیږد یا آرشیف کړئ.",
+        "editModalTitle": "ډول سمول",
+        "columns": {
+          "name": "د ډول نوم",
+          "statusGroup": "د حالت ډله",
+          "assetCount": "شتمنۍ",
+          "actions": "کړنې"
+        }
+      }
+    },
+    "detail": {
+      "breadcrumb": "شتمنیو ته بیرته",
+      "edit": "سمول",
+      "archive": "آرشیف",
+      "restore": "بیرته راوګرځول",
+      "archivedNotice": "دا شتمني آرشیف شوې او په فعال لیست کې نه ښکاري.",
+      "changeStatus": "حالت بدل کړئ",
+      "notFoundTitle": "شتمني ونه موندل شوه",
+      "notFoundDescription": "دا شتمني حذف شوې یا لینک ناسم دی.",
+      "backToList": "شتمنیو ته بیرته",
+      "tabs": {
+        "overview": "عمومي کتنه",
+        "details": "جزئیات"
+      },
+      "overview": {
+        "location": "موقعیت",
+        "summary": "فعالیت",
+        "locationEmptyTitle": "موقعیت شتون نلري",
+        "locationEmptyDescription": "د سایټ یا نقشې فعالولو وروسته موقعیت به ښکاره شي.",
+        "activityEmptyTitle": "تر اوسه فعالیت نشته",
+        "activityEmptyDescription": "د دې شتمنۍ پورې اړوند معاینې او کړنې به دلته ښکاره شي."
+      },
+      "details": {
+        "summary": "لنډیز",
+        "status": "حالت"
+      },
+      "fields": {
+        "uniqueId": "بېل پېژند",
+        "displayName": "ښکاره نوم",
+        "type": "ډول",
+        "site": "سایټ",
+        "status": "حالت"
+      }
+    }
   },
   "Common": {
     "appName": "AssetFlow"

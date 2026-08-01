@@ -18,12 +18,152 @@
   "Navigation": {
     "main": "Main navigation",
     "dashboard": "Dashboard",
+    "assets": "Assets",
     "collapse": "Collapse sidebar"
   },
   "Status": {
     "active": "Active",
     "assigned": "Assigned",
-    "maintenance": "Maintenance"
+    "maintenance": "Maintenance",
+    "retired": "Retired",
+    "error": "Inactive"
+  },
+  "Assets": {
+    "title": "Assets",
+    "settingsButton": "Settings",
+    "addAsset": "Add asset",
+    "searchPlaceholder": "Search",
+    "addFilter": "Add filter",
+    "emptyTableTitle": "No assets added yet",
+    "emptyTableDescription": "Add your first asset to start tracking equipment across your organization.",
+    "noFilterResults": "No assets match your filters",
+    "viewArchived": "View archived",
+    "kpi": {
+      "totalAssets": "Total assets",
+      "openActions": "Open actions",
+      "inspectionsLast30Days": "Inspections last 30 days"
+    },
+    "filters": {
+      "type": "Asset type",
+      "status": "Status",
+      "allTypes": "All types",
+      "allStatuses": "All statuses",
+      "clear": "Clear filters"
+    },
+    "columns": {
+      "uniqueId": "Unique ID",
+      "displayName": "Display name",
+      "type": "Type",
+      "status": "Status",
+      "lastInspection": "Last inspection",
+      "openActions": "Open actions",
+      "actions": "Actions"
+    },
+    "onboarding": {
+      "title": "Get started with assets",
+      "description": "Complete these steps to set up asset management for your organization.",
+      "stepTypes": "Create asset types",
+      "stepAssets": "Add assets",
+      "start": "Start",
+      "dismiss": "Dismiss"
+    },
+    "add": {
+      "title": "Add asset",
+      "cancel": "Cancel",
+      "noTypesTitle": "No asset types created yet",
+      "noTypesDescription": "You'll need to create an asset type before adding assets. Use types to categorize your assets and define the details you want to capture.",
+      "createTypeCta": "+ Create a type",
+      "type": "Type",
+      "uniqueId": "Unique ID",
+      "displayName": "Display name",
+      "status": "Status",
+      "site": "Site",
+      "sitePlaceholder": "Select existing site",
+      "selectType": "Select asset type",
+      "photoLabel": "Drag asset profile photo here or",
+      "browse": "browse",
+      "required": "required",
+      "save": "Save",
+      "duplicateUniqueId": "Another active asset already uses this unique ID."
+    },
+    "edit": {
+      "title": "Edit asset",
+      "save": "Save changes",
+      "duplicateUniqueId": "Another active asset already uses this unique ID."
+    },
+    "archived": {
+      "title": "Archived assets",
+      "description": "Assets removed from the active list. Restore them to make them visible again.",
+      "backToAssets": "Back to assets",
+      "emptyTitle": "No archived assets",
+      "emptyDescription": "Archived assets will appear here.",
+      "restore": "Restore",
+      "archivedBadge": "Archived"
+    },
+    "settings": {
+      "title": "Assets settings",
+      "backToAssets": "Back to assets",
+      "tabsLabel": "Settings sections",
+      "types": {
+        "tab": "Types",
+        "manageTitle": "Manage types",
+        "createType": "+ Create type",
+        "emptyTitle": "No asset types",
+        "emptyDescription": "Create asset types for your organization before adding assets.",
+        "createModalTitle": "Create a new type",
+        "editModalTitle": "Edit type",
+        "typeName": "Type name",
+        "typeNamePlaceholder": "Enter type name",
+        "statusGroup": "Status group",
+        "statusGroupPlaceholder": "No status group",
+        "cancel": "Cancel",
+        "create": "Create",
+        "save": "Save changes",
+        "edit": "Edit",
+        "delete": "Delete",
+        "deleteBlocked": "Cannot delete a type that has assets assigned. Reassign or archive those assets first.",
+        "columns": {
+          "name": "Type name",
+          "statusGroup": "Status group",
+          "assetCount": "Assets",
+          "actions": "Actions"
+        }
+      }
+    },
+    "detail": {
+      "breadcrumb": "Back to assets",
+      "edit": "Edit",
+      "archive": "Archive",
+      "restore": "Restore",
+      "archivedNotice": "This asset is archived and hidden from the active list.",
+      "changeStatus": "Change status",
+      "notFoundTitle": "Asset not found",
+      "notFoundDescription": "This asset may have been removed or the link is invalid.",
+      "backToList": "Back to assets",
+      "tabs": {
+        "overview": "Overview",
+        "details": "Details"
+      },
+      "overview": {
+        "location": "Location",
+        "summary": "Activity",
+        "locationEmptyTitle": "Location not available",
+        "locationEmptyDescription": "Asset location will appear here once sites or maps are enabled.",
+        "activityEmptyTitle": "No activity yet",
+        "activityEmptyDescription": "Inspections and actions related to this asset will show here."
+      },
+      "details": {
+        "summary": "Summary",
+        "status": "Status"
+      },
+      "fields": {
+        "uniqueId": "Unique ID",
+        "displayName": "Display name",
+        "type": "Type",
+        "site": "Site",
+        "status": "Status"
+      }
+    }
   },
   "Common": {
     "appName": "AssetFlow"
