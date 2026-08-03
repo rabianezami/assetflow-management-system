@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^5.4.0",
     "@repo/db": "workspace:*",
     "@repo/ui": "workspace:*",
+    "@tanstack/react-query": "^5.101.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.44.7",
