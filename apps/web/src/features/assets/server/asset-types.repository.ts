@@ -24,7 +24,7 @@ export async function listAssetTypes(query: ListAssetTypesQuery) {
 
   return {
     items: rows,
-    total: totals[0]?.total ?? 0,
+    total: Number(totals[0]?.total ?? 0),
     page: query.page,
     limit: query.limit,
   };

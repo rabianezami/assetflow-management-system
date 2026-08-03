@@ -4,14 +4,18 @@ import {
   assetTypes,
   type AssetRow,
 } from "@repo/db";
-import { and, count, desc, eq, ilike, ne, or, sql, type SQL } from "drizzle-orm";
+import { and, count, desc, eq, sql, type SQL } from "drizzle-orm";
 
 import type {
   CreateAssetBody,
   ListAssetsQuery,
   UpdateAssetBody,
 } from "@/features/assets/contracts/asset.schemas";
-import { conflict, notFound } from "@/lib/api/errors";
+import { badRequest, conflict, notFound } from "@/lib/api/errors";
+
+function escapeIlikePattern(value: string): string {
+  return value.replace(/[%_\\]/g, "\\$&");
+}
 
 async function assertTypeExists(typeId: string) {
   const db = getDb();
@@ -22,36 +26,44 @@ async function assertTypeExists(typeId: string) {
     .limit(1);
 
   if (!type) {
-    throw notFound("Asset type not found");
+    throw badRequest("typeId does not reference an existing asset type", {
+      typeId,
+    });
   }
 }
 
-async function assertNoDuplicateActiveUniqueId(
-  uniqueId: string,
-  excludeId?: string,
-) {
-  const db = getDb();
-  const normalized = uniqueId.trim().toLowerCase();
-
-  const conditions: SQL[] = [
-    sql`lower(${assets.uniqueId}) = ${normalized}`,
-    eq(assets.lifecycle, "active"),
-  ];
-  if (excludeId) {
-    conditions.push(ne(assets.id, excludeId));
+/** Rely on the DB partial unique index; map PG 23505 → API conflict. */
+async function withUniqueIdConflict<T>(fn: () => Promise<T>): Promise<T> {
+  try {
+    return await fn();
+  } catch (error) {
+    if (isUniqueViolation(error)) {
+      throw conflict("Another active asset already uses this unique ID");
+    }
+    throw error;
   }
+}
 
-  const [match] = await db
-    .select({ id: assets.id })
-    .from(assets)
-    .where(and(...conditions))
-    .limit(1);
-
-  if (match) {
-    throw conflict("Another active asset already uses this unique ID", {
-      uniqueId: uniqueId.trim(),
-    });
+function isUniqueViolation(error: unknown): boolean {
+  let current: unknown = error;
+  for (let depth = 0; depth < 5 && current; depth += 1) {
+    if (typeof current !== "object" || current === null) {
+      break;
+    }
+    if ("code" in current && String(current.code) === "23505") {
+      return true;
+    }
+    if ("cause" in current) {
+      current = current.cause;
+      continue;
+    }
+    if ("errors" in current && Array.isArray(current.errors)) {
+      current = current.errors[0];
+      continue;
+    }
+    break;
   }
+  return false;
 }
 
 export async function listAssets(query: ListAssetsQuery) {
@@ -69,9 +81,10 @@ export async function listAssets(query: ListAssetsQuery) {
     conditions.push(eq(assets.status, query.status));
   }
   if (query.search) {
-    const term = `%${query.search}%`;
+    const term = `%${escapeIlikePattern(query.search)}%`;
+    // ESCAPE required so \% / \_ are literals (PG has no default LIKE escape).
     conditions.push(
-      or(ilike(assets.uniqueId, term), ilike(assets.displayName, term))!,
+      sql`(${assets.uniqueId} ILIKE ${term} ESCAPE '\\' OR ${assets.displayName} ILIKE ${term} ESCAPE '\\')`,
     );
   }
 
@@ -90,7 +103,7 @@ export async function listAssets(query: ListAssetsQuery) {
 
   return {
     items: rows,
-    total: totals[0]?.total ?? 0,
+    total: Number(totals[0]?.total ?? 0),
     page: query.page,
     limit: query.limit,
   };
@@ -108,10 +121,9 @@ export async function getAssetById(id: string): Promise<AssetRow | undefined> {
 
 export async function createAsset(input: CreateAssetBody): Promise<AssetRow> {
   await assertTypeExists(input.typeId);
-  await assertNoDuplicateActiveUniqueId(input.uniqueId);
 
-  const db = getDb();
-  try {
+  return withUniqueIdConflict(async () => {
+    const db = getDb();
     const [row] = await db
       .insert(assets)
       .values({
@@ -131,12 +143,7 @@ export async function createAsset(input: CreateAssetBody): Promise<AssetRow> {
       throw new Error("Failed to create asset");
     }
     return row;
-  } catch (error) {
-    if (isUniqueViolation(error)) {
-      throw conflict("Another active asset already uses this unique ID");
-    }
-    throw error;
-  }
+  });
 }
 
 export async function updateAsset(
@@ -152,10 +159,9 @@ export async function updateAsset(
   }
 
   await assertTypeExists(input.typeId);
-  await assertNoDuplicateActiveUniqueId(input.uniqueId, id);
 
-  const db = getDb();
-  try {
+  return withUniqueIdConflict(async () => {
+    const db = getDb();
     const [row] = await db
       .update(assets)
       .set({
@@ -172,12 +178,7 @@ export async function updateAsset(
       throw notFound("Asset not found");
     }
     return row;
-  } catch (error) {
-    if (isUniqueViolation(error)) {
-      throw conflict("Another active asset already uses this unique ID");
-    }
-    throw error;
-  }
+  });
 }
 
 export async function archiveAsset(id: string): Promise<AssetRow> {
@@ -215,10 +216,8 @@ export async function restoreAsset(id: string): Promise<AssetRow> {
     throw conflict("Only archived assets can be restored");
   }
 
-  await assertNoDuplicateActiveUniqueId(existing.uniqueId, id);
-
-  const db = getDb();
-  try {
+  return withUniqueIdConflict(async () => {
+    const db = getDb();
     const [row] = await db
       .update(assets)
       .set({
@@ -232,17 +231,5 @@ export async function restoreAsset(id: string): Promise<AssetRow> {
       throw notFound("Asset not found");
     }
     return row;
-  } catch (error) {
-    if (isUniqueViolation(error)) {
-      throw conflict("Another active asset already uses this unique ID");
-    }
-    throw error;
-  }
-}
-
-function isUniqueViolation(error: unknown): boolean {
-  if (!error || typeof error !== "object") return false;
-  const code = "code" in error ? String(error.code) : "";
-  // postgres.js / PostgreSQL unique_violation
-  return code === "23505";
+  });
 }

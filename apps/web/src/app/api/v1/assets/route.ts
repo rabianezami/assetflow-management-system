@@ -9,11 +9,8 @@ import {
 import { parseJsonBody, parseSearchParams } from "@/lib/api/parse";
 import { jsonOk } from "@/lib/api/response";
 import { withApiHandler } from "@/lib/api/route-handler";
-import { getRequestOrganizationId } from "@/lib/api/tenant";
 
 export const GET = withApiHandler(async (request) => {
-  void getRequestOrganizationId();
-
   const query = parseSearchParams(request, listAssetsQuerySchema);
   const result = await listAssets(query);
 
@@ -27,8 +24,6 @@ export const GET = withApiHandler(async (request) => {
 });
 
 export const POST = withApiHandler(async (request) => {
-  void getRequestOrganizationId();
-
   const body = await parseJsonBody(request, createAssetSchema);
   const created = await createAsset(body);
   return jsonOk(created, { status: 201 });

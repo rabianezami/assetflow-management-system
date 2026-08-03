@@ -32,3 +32,16 @@ export function parseSearchParams<T>(
   }
   return result.data;
 }
+
+/** Parse a route `[id]` (or similar) param object against a Zod schema that exposes `id`. */
+export async function parseIdParam(
+  params: Promise<Record<string, string>>,
+  schema: ZodType<{ id: string }>,
+): Promise<string> {
+  const resolved = await params;
+  const result = schema.safeParse(resolved);
+  if (!result.success) {
+    throw validationError("Path validation failed", result.error.flatten());
+  }
+  return result.data.id;
+}

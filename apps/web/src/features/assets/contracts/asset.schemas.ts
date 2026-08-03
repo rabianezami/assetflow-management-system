@@ -1,6 +1,11 @@
 import { z } from "zod";
 
-/** Aligned with apps/web/src/features/assets/types/asset.types.ts */
+/**
+ * API request contracts for assets.
+ * Response shapes come from `@repo/db` (`AssetRow`); wire them through Zod
+ * only when response validation is needed.
+ */
+
 export const assetStatusSchema = z.enum([
   "active",
   "assigned",
@@ -11,21 +16,6 @@ export const assetStatusSchema = z.enum([
 
 export const assetLifecycleSchema = z.enum(["active", "archived"]);
 
-export const assetSchema = z.object({
-  id: z.string().uuid(),
-  uniqueId: z.string(),
-  displayName: z.string(),
-  typeId: z.string().uuid(),
-  status: assetStatusSchema,
-  site: z.string(),
-  lifecycle: assetLifecycleSchema,
-  archivedAt: z.string().nullable(),
-  lastInspectionAt: z.string().nullable(),
-  openActionsCount: z.number().int(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-});
-
 export const createAssetSchema = z.object({
   uniqueId: z.string().trim().min(1, "uniqueId is required"),
   displayName: z.string().trim().optional(),
@@ -34,6 +24,7 @@ export const createAssetSchema = z.object({
   site: z.string().trim().optional(),
 });
 
+/** Full-replace body (not JSON Merge Patch). Clients must send every field. */
 export const updateAssetSchema = z.object({
   uniqueId: z.string().trim().min(1, "uniqueId is required"),
   displayName: z.string().trim().optional(),

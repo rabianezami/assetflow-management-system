@@ -1,18 +1,17 @@
 import { z } from "zod";
 
-/** Aligned with apps/web/src/features/assets/types/asset.types.ts */
-export const assetTypeSchema = z.object({
-  id: z.string().uuid(),
-  name: z.string(),
-  statusGroup: z.string(),
-  createdAt: z.string(),
-});
+/**
+ * API request contracts for asset types.
+ * Response shapes come from `@repo/db` (`AssetTypeRow`); wire them through Zod
+ * only when response validation is needed.
+ */
 
 export const createAssetTypeSchema = z.object({
   name: z.string().trim().min(1, "name is required"),
   statusGroup: z.string().trim().optional(),
 });
 
+/** Full-replace body (not JSON Merge Patch). Clients must send every field. */
 export const updateAssetTypeSchema = z.object({
   name: z.string().trim().min(1, "name is required"),
   statusGroup: z.string().trim().optional(),
