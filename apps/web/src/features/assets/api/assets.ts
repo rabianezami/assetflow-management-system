@@ -1,4 +1,4 @@
-import { apiFetch, type PaginationMeta } from "@/lib/api/client";
+import { ApiClientError, apiFetch, type PaginationMeta } from "@/lib/api/client";
 import type {
   CreateAssetBody,
   ListAssetsQuery,
@@ -30,10 +30,14 @@ export async function fetchAssets(
   const { data, meta } = await apiFetch<Asset[]>(
     `${ASSETS_BASE}?${toSearchParams(query)}`,
   );
-  return {
-    items: data,
-    meta: meta ?? { page: query.page, limit: query.limit, total: data.length },
-  };
+  if (!meta) {
+    throw new ApiClientError(
+      "INTERNAL_ERROR",
+      "List response missing pagination meta",
+      500,
+    );
+  }
+  return { items: data, meta };
 }
 
 export async function fetchAsset(id: string): Promise<Asset> {

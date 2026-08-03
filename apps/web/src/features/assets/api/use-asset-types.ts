@@ -7,17 +7,15 @@ import {
   fetchAssetTypes,
 } from "@/features/assets/api/asset-types";
 import { assetTypeKeys } from "@/features/assets/api/keys";
-import {
-  listAssetTypesQuerySchema,
-  type ListAssetTypesQuery,
-} from "@/features/assets/contracts/asset-type.schemas";
+import { normalizeListAssetTypesQuery } from "@/features/assets/api/list-query";
+import type { ListAssetTypesQuery } from "@/features/assets/contracts/asset-type.schemas";
 
 export function useAssetTypes(query: Partial<ListAssetTypesQuery> = {}) {
-  const parsed = listAssetTypesQuerySchema.parse(query);
+  const normalized = normalizeListAssetTypesQuery(query);
 
   return useQuery({
-    queryKey: assetTypeKeys.list(parsed),
-    queryFn: () => fetchAssetTypes(parsed),
+    queryKey: assetTypeKeys.list(normalized),
+    queryFn: () => fetchAssetTypes(normalized),
   });
 }
 

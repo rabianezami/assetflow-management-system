@@ -4,17 +4,15 @@ import { useQuery } from "@tanstack/react-query";
 
 import { fetchAsset, fetchAssets } from "@/features/assets/api/assets";
 import { assetKeys } from "@/features/assets/api/keys";
-import {
-  listAssetsQuerySchema,
-  type ListAssetsQuery,
-} from "@/features/assets/contracts/asset.schemas";
+import { normalizeListAssetsQuery } from "@/features/assets/api/list-query";
+import type { ListAssetsQuery } from "@/features/assets/contracts/asset.schemas";
 
 export function useAssets(query: Partial<ListAssetsQuery> = {}) {
-  const parsed = listAssetsQuerySchema.parse(query);
+  const normalized = normalizeListAssetsQuery(query);
 
   return useQuery({
-    queryKey: assetKeys.list(parsed),
-    queryFn: () => fetchAssets(parsed),
+    queryKey: assetKeys.list(normalized),
+    queryFn: () => fetchAssets(normalized),
   });
 }
 
