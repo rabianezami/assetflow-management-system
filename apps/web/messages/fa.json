@@ -43,8 +43,8 @@
     "viewArchived": "مشاهده بایگانی",
     "kpi": {
       "totalAssets": "کل دارایی‌ها",
-      "openActions": "اقدامات باز",
-      "inspectionsLast30Days": "بازرسی‌های ۳۰ روز گذشته"
+      "openActions": "اقدامات باز (این صفحه)",
+      "inspectionsLast30Days": "بازرسی‌های ۳۰ روز گذشته (این صفحه)"
     },
     "filters": {
       "type": "نوع دارایی",

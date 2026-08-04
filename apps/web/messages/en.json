@@ -42,8 +42,8 @@
     "viewArchived": "View archived",
     "kpi": {
       "totalAssets": "Total assets",
-      "openActions": "Open actions",
-      "inspectionsLast30Days": "Inspections last 30 days"
+      "openActions": "Open actions (this page)",
+      "inspectionsLast30Days": "Inspections last 30 days (this page)"
     },
     "filters": {
       "type": "Asset type",

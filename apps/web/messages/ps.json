@@ -43,8 +43,8 @@
     "viewArchived": "آرشیف وګورئ",
     "kpi": {
       "totalAssets": "ټولې شتمنۍ",
-      "openActions": "خلاصې کړنې",
-      "inspectionsLast30Days": "په تیرو ۳۰ ورځو کې معاینې"
+      "openActions": "خلاصې کړنې (دا پاڼه)",
+      "inspectionsLast30Days": "په تیرو ۳۰ ورځو کې معاینې (دا پاڼه)"
     },
     "filters": {
       "type": "د شتمنۍ ډول",

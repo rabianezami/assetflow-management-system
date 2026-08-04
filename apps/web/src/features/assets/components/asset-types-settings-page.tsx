@@ -8,13 +8,11 @@ import { EmptyState } from "@/components/common/empty-state";
 import { SettingsLayout } from "@/components/common/settings-layout";
 import { Button } from "@/components/ui/button";
 import {
-  useAssets,
   useAssetTypeMutations,
   useAssetTypes,
 } from "@/features/assets/api";
 import { TypeFormModal } from "@/features/assets/components/type-form-modal";
 import { isConflictError } from "@/features/assets/lib/api-error";
-import { countAssetsByTypeId } from "@/features/assets/lib/asset-helpers";
 import { cn } from "@/lib/utils";
 
 type ModalState =
@@ -28,7 +26,6 @@ export function AssetTypesSettingsPage() {
   const tAssets = useTranslations("Assets");
 
   const typesQuery = useAssetTypes({ limit: 100 });
-  const assetsQuery = useAssets({ lifecycle: "all", limit: 100 });
   const { createAssetType, updateAssetType, deleteAssetType } =
     useAssetTypeMutations();
 
@@ -36,9 +33,8 @@ export function AssetTypesSettingsPage() {
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const assetTypes = typesQuery.data?.items ?? [];
-  const assets = assetsQuery.data?.items ?? [];
-  const isLoading = typesQuery.isLoading || assetsQuery.isLoading;
-  const isError = typesQuery.isError || assetsQuery.isError;
+  const isLoading = typesQuery.isLoading;
+  const isError = typesQuery.isError;
 
   const tabs = (
     <nav className="flex gap-6 border-b border-border" aria-label={t("tabsLabel")}>
@@ -120,12 +116,6 @@ export function AssetTypesSettingsPage() {
                   </th>
                   <th
                     scope="col"
-                    className="px-4 py-3 text-start font-medium text-muted-foreground"
-                  >
-                    {tTypes("columns.assetCount")}
-                  </th>
-                  <th
-                    scope="col"
                     className="px-4 py-3 text-end font-medium text-muted-foreground"
                   >
                     {tTypes("columns.actions")}
@@ -133,54 +123,50 @@ export function AssetTypesSettingsPage() {
                 </tr>
               </thead>
               <tbody>
-                {assetTypes.map((type) => {
-                  const count = countAssetsByTypeId(assets, type.id);
-                  return (
-                    <tr
-                      key={type.id}
-                      className="border-b border-border last:border-0 hover:bg-muted/50"
+                {assetTypes.map((type) => (
+                  <tr
+                    key={type.id}
+                    className="border-b border-border last:border-0 hover:bg-muted/50"
+                  >
+                    <td className="px-4 py-3 font-medium">{type.name}</td>
+                    <td
+                      className={cn(
+                        "px-4 py-3",
+                        !type.statusGroup && "text-muted-foreground",
+                      )}
                     >
-                      <td className="px-4 py-3 font-medium">{type.name}</td>
-                      <td
-                        className={cn(
-                          "px-4 py-3",
-                          !type.statusGroup && "text-muted-foreground",
-                        )}
-                      >
-                        {type.statusGroup || "—"}
-                      </td>
-                      <td className="px-4 py-3 tabular-nums">{count}</td>
-                      <td className="px-4 py-3">
-                        <div className="flex justify-end gap-2">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() =>
-                              setModal({
-                                mode: "edit",
-                                typeId: type.id,
-                                name: type.name,
-                                statusGroup: type.statusGroup,
-                              })
-                            }
-                          >
-                            {tTypes("edit")}
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => void handleDelete(type.id)}
-                            disabled={count > 0 || deleteAssetType.isPending}
-                          >
-                            {tTypes("delete")}
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
+                      {type.statusGroup || "—"}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            setModal({
+                              mode: "edit",
+                              typeId: type.id,
+                              name: type.name,
+                              statusGroup: type.statusGroup,
+                            })
+                          }
+                        >
+                          {tTypes("edit")}
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => void handleDelete(type.id)}
+                          disabled={deleteAssetType.isPending}
+                        >
+                          {tTypes("delete")}
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -193,11 +179,13 @@ export function AssetTypesSettingsPage() {
         initialName={modal.mode === "edit" ? modal.name : ""}
         initialStatusGroup={modal.mode === "edit" ? modal.statusGroup : ""}
         onClose={() => setModal({ mode: "closed" })}
-        onSubmit={(name, statusGroup) => {
+        onSubmit={async (name, statusGroup) => {
           if (modal.mode === "create") {
-            void createAssetType.mutateAsync({ name, statusGroup });
-          } else if (modal.mode === "edit") {
-            void updateAssetType.mutateAsync({
+            await createAssetType.mutateAsync({ name, statusGroup });
+            return;
+          }
+          if (modal.mode === "edit") {
+            await updateAssetType.mutateAsync({
               id: modal.typeId,
               body: { name, statusGroup },
             });
