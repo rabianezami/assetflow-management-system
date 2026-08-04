@@ -2,28 +2,28 @@
 
 import { CheckCircle2, Circle } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
-import { useAssetsStore } from "@/features/assets/stores/use-assets-store";
+import { useAssets, useAssetTypes } from "@/features/assets/api";
+import { useAssetsUiStore } from "@/features/assets/stores/use-assets-ui-store";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 export function AssetOnboardingBanner() {
   const t = useTranslations("Assets.onboarding");
-  const assetTypes = useAssetsStore((s) => s.assetTypes);
-  const allAssets = useAssetsStore((s) => s.assets);
-  const hasAssets = useMemo(
-    () => allAssets.some((a) => (a.lifecycle ?? "active") === "active"),
-    [allAssets],
-  );
-  const dismissed = useAssetsStore((s) => s.onboardingDismissed);
-  const dismiss = useAssetsStore((s) => s.dismissOnboarding);
+  const typesQuery = useAssetTypes({ limit: 1 });
+  const assetsQuery = useAssets({ lifecycle: "active", limit: 1 });
+  const dismissed = useAssetsUiStore((s) => s.onboardingDismissed);
+  const dismiss = useAssetsUiStore((s) => s.dismissOnboarding);
 
-  const hasTypes = assetTypes.length > 0;
+  if (dismissed || typesQuery.isLoading || assetsQuery.isLoading) return null;
+  if (typesQuery.isError || assetsQuery.isError) return null;
+
+  const hasTypes = (typesQuery.data?.meta.total ?? 0) > 0;
+  const hasAssets = (assetsQuery.data?.meta.total ?? 0) > 0;
   const allDone = hasTypes && hasAssets;
 
-  if (dismissed || allDone) return null;
+  if (allDone) return null;
 
   const steps = [
     { done: hasTypes, label: t("stepTypes"), href: "/assets/settings/types" },

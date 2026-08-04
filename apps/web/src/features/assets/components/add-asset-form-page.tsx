@@ -5,20 +5,22 @@ import { useState } from "react";
 
 import { FormPageLayout } from "@/components/common/form-page-layout";
 import { Button } from "@/components/ui/button";
+import { useAssetMutations, useAssetTypes } from "@/features/assets/api";
 import {
   AssetFormFields,
   type AssetFormValues,
 } from "@/features/assets/components/asset-form-fields";
 import { NoTypesGate } from "@/features/assets/components/no-types-gate";
-import { useAssetsStore } from "@/features/assets/stores/use-assets-store";
+import { isConflictError } from "@/features/assets/lib/api-error";
 import { useRouter } from "@/i18n/navigation";
 import { Card } from "@repo/ui/card";
 
 export function AddAssetFormPage() {
   const t = useTranslations("Assets.add");
+  const tAssets = useTranslations("Assets");
   const router = useRouter();
-  const assetTypes = useAssetsStore((s) => s.assetTypes);
-  const addAsset = useAssetsStore((s) => s.addAsset);
+  const typesQuery = useAssetTypes({ limit: 100 });
+  const { createAsset } = useAssetMutations();
 
   const [values, setValues] = useState<AssetFormValues>({
     uniqueId: "",
@@ -29,20 +31,44 @@ export function AddAssetFormPage() {
   });
   const [error, setError] = useState<string | null>(null);
 
+  if (typesQuery.isLoading) {
+    return (
+      <p className="px-4 py-16 text-center text-body-sm text-muted-foreground">
+        {tAssets("loading")}
+      </p>
+    );
+  }
+
+  if (typesQuery.isError) {
+    return (
+      <p className="px-4 py-16 text-center text-body-sm text-destructive" role="alert">
+        {tAssets("loadError")}
+      </p>
+    );
+  }
+
+  const assetTypes = typesQuery.data?.items ?? [];
+
   if (assetTypes.length === 0) {
     return <NoTypesGate />;
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!values.uniqueId.trim() || !values.typeId) return;
     setError(null);
-    const asset = addAsset(values);
-    if (!asset) {
-      setError(t("duplicateUniqueId"));
-      return;
+    try {
+      const asset = await createAsset.mutateAsync({
+        uniqueId: values.uniqueId,
+        displayName: values.displayName || undefined,
+        typeId: values.typeId,
+        status: values.status,
+        site: values.site || undefined,
+      });
+      router.push(`/assets/${asset.id}`);
+    } catch (err) {
+      setError(isConflictError(err) ? t("duplicateUniqueId") : tAssets("loadError"));
     }
-    router.push(`/assets/${asset.id}`);
   }
 
   return (
@@ -52,7 +78,7 @@ export function AddAssetFormPage() {
       cancelHref="/assets"
     >
       <Card className="p-6">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <form onSubmit={(e) => void handleSubmit(e)} className="flex flex-col gap-5">
           <AssetFormFields
             assetTypes={assetTypes}
             values={values}
@@ -63,7 +89,12 @@ export function AddAssetFormPage() {
               {error}
             </p>
           ) : null}
-          <Button type="submit" size="lg" className="w-full">
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full"
+            disabled={createAsset.isPending}
+          >
             {t("save")}
           </Button>
         </form>
@@ -71,4 +102,3 @@ export function AddAssetFormPage() {
     </FormPageLayout>
   );
 }
-

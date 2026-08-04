@@ -7,10 +7,16 @@ import { EmptyState } from "@/components/common/empty-state";
 import { FormPageLayout } from "@/components/common/form-page-layout";
 import { Button } from "@/components/ui/button";
 import {
+  useAsset,
+  useAssetMutations,
+  useAssetTypes,
+} from "@/features/assets/api";
+import {
   AssetFormFields,
   type AssetFormValues,
 } from "@/features/assets/components/asset-form-fields";
-import { useAssetsStore } from "@/features/assets/stores/use-assets-store";
+import { isConflictError } from "@/features/assets/lib/api-error";
+import { isArchivedLifecycle } from "@/features/assets/lib/asset-helpers";
 import { Link, useRouter } from "@/i18n/navigation";
 import { Card } from "@repo/ui/card";
 
@@ -22,16 +28,20 @@ export function EditAssetFormPage({ assetId }: EditAssetFormPageProps) {
   const t = useTranslations("Assets.edit");
   const tAdd = useTranslations("Assets.add");
   const tDetail = useTranslations("Assets.detail");
+  const tAssets = useTranslations("Assets");
   const router = useRouter();
-  const asset = useAssetsStore((s) => s.assets.find((a) => a.id === assetId));
-  const assetTypes = useAssetsStore((s) => s.assetTypes);
-  const updateAsset = useAssetsStore((s) => s.updateAsset);
+
+  const assetQuery = useAsset(assetId);
+  const typesQuery = useAssetTypes({ limit: 100 });
+  const { updateAsset } = useAssetMutations();
 
   const [values, setValues] = useState<AssetFormValues | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const asset = assetQuery.data;
+
   useEffect(() => {
-    if (asset && (asset.lifecycle ?? "active") === "active") {
+    if (asset && !isArchivedLifecycle(asset)) {
       setValues({
         uniqueId: asset.uniqueId,
         displayName: asset.displayName,
@@ -42,7 +52,15 @@ export function EditAssetFormPage({ assetId }: EditAssetFormPageProps) {
     }
   }, [asset]);
 
-  if (!asset) {
+  if (assetQuery.isLoading || typesQuery.isLoading) {
+    return (
+      <p className="px-4 py-16 text-center text-body-sm text-muted-foreground">
+        {tAssets("loading")}
+      </p>
+    );
+  }
+
+  if (assetQuery.isError || !asset) {
     return (
       <EmptyState
         title={tDetail("notFoundTitle")}
@@ -56,7 +74,7 @@ export function EditAssetFormPage({ assetId }: EditAssetFormPageProps) {
     );
   }
 
-  if ((asset.lifecycle ?? "active") === "archived") {
+  if (isArchivedLifecycle(asset)) {
     return (
       <EmptyState
         title={tDetail("archivedNotice")}
@@ -69,18 +87,29 @@ export function EditAssetFormPage({ assetId }: EditAssetFormPageProps) {
     );
   }
 
+  const assetTypes = typesQuery.data?.items ?? [];
+
   if (!values) return null;
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!values || !values.uniqueId.trim() || !values.typeId) return;
     setError(null);
-    const ok = updateAsset(assetId, values);
-    if (!ok) {
-      setError(t("duplicateUniqueId"));
-      return;
+    try {
+      await updateAsset.mutateAsync({
+        id: assetId,
+        body: {
+          uniqueId: values.uniqueId,
+          displayName: values.displayName || undefined,
+          typeId: values.typeId,
+          status: values.status,
+          site: values.site || undefined,
+        },
+      });
+      router.push(`/assets/${assetId}`);
+    } catch (err) {
+      setError(isConflictError(err) ? t("duplicateUniqueId") : tAssets("loadError"));
     }
-    router.push(`/assets/${assetId}`);
   }
 
   return (
@@ -90,7 +119,7 @@ export function EditAssetFormPage({ assetId }: EditAssetFormPageProps) {
       cancelHref={`/assets/${assetId}`}
     >
       <Card className="p-6">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <form onSubmit={(e) => void handleSubmit(e)} className="flex flex-col gap-5">
           <AssetFormFields
             assetTypes={assetTypes}
             values={values}
@@ -102,7 +131,12 @@ export function EditAssetFormPage({ assetId }: EditAssetFormPageProps) {
               {error}
             </p>
           ) : null}
-          <Button type="submit" size="lg" className="w-full">
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full"
+            disabled={updateAsset.isPending}
+          >
             {t("save")}
           </Button>
         </form>

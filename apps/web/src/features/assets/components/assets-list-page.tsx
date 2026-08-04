@@ -2,7 +2,7 @@
 
 import { Package, Plus, Settings } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import { DataTableShell } from "@/components/common/data-table-shell";
 import { KpiStatCard } from "@/components/common/kpi-stat-card";
@@ -10,12 +10,13 @@ import { PageHeader } from "@/components/common/page-header";
 import { StatusBadge } from "@/components/common/status-badge";
 import { TableEmptyState } from "@/components/common/table-empty-state";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { useAssets, useAssetTypes } from "@/features/assets/api";
 import { AssetOnboardingBanner } from "@/features/assets/components/asset-onboarding-banner";
 import {
   AssetTableFilters,
   type AssetTableFiltersState,
 } from "@/features/assets/components/asset-table-filters";
-import { useAssetsStore } from "@/features/assets/stores/use-assets-store";
+import { getTypeName } from "@/features/assets/lib/asset-helpers";
 import type { AssetStatus } from "@/features/assets/types/asset.types";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
@@ -39,13 +40,6 @@ export function AssetsListPage() {
   const locale = useLocale();
   const t = useTranslations("Assets");
   const tStatus = useTranslations("Status");
-  const allAssets = useAssetsStore((s) => s.assets);
-  const assets = useMemo(
-    () => allAssets.filter((a) => (a.lifecycle ?? "active") === "active"),
-    [allAssets],
-  );
-  const assetTypes = useAssetsStore((s) => s.assetTypes);
-  const getTypeById = useAssetsStore((s) => s.getTypeById);
 
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [filters, setFilters] = useState<AssetTableFiltersState>({
@@ -53,6 +47,19 @@ export function AssetsListPage() {
     typeId: "all",
     status: "all",
   });
+
+  const assetsQuery = useAssets({
+    lifecycle: "active",
+    limit: 100,
+    typeId: filters.typeId === "all" ? undefined : filters.typeId,
+    status: filters.status === "all" ? undefined : filters.status,
+    search: filters.search.trim() || undefined,
+  });
+  const typesQuery = useAssetTypes({ limit: 100 });
+
+  const assets = assetsQuery.data?.items ?? [];
+  const assetTypes = typesQuery.data?.items ?? [];
+  const totalAssets = assetsQuery.data?.meta.total ?? assets.length;
 
   const statusLabels: Record<AssetStatus, string> = {
     active: tStatus("active"),
@@ -62,32 +69,20 @@ export function AssetsListPage() {
     error: tStatus("error"),
   };
 
-  const filtered = useMemo(() => {
-    const q = filters.search.trim().toLowerCase();
-    return assets.filter((asset) => {
-      if (filters.typeId !== "all" && asset.typeId !== filters.typeId) {
-        return false;
-      }
-      if (filters.status !== "all" && asset.status !== filters.status) {
-        return false;
-      }
-      if (!q) return true;
-      const typeName = getTypeById(asset.typeId)?.name.toLowerCase() ?? "";
-      return (
-        asset.uniqueId.toLowerCase().includes(q) ||
-        asset.displayName.toLowerCase().includes(q) ||
-        typeName.includes(q)
-      );
-    });
-  }, [assets, filters, getTypeById]);
-
   const openActionsTotal = assets.reduce(
     (sum, asset) => sum + (asset.openActionsCount ?? 0),
     0,
   );
   const inspectionsCount = countRecentInspections(assets);
-  const isEmpty = assets.length === 0;
-  const noFilterResults = !isEmpty && filtered.length === 0;
+  const isLoading = assetsQuery.isLoading || typesQuery.isLoading;
+  const isError = assetsQuery.isError || typesQuery.isError;
+  const isEmpty = !isLoading && !isError && assets.length === 0;
+  const hasActiveFilters =
+    Boolean(filters.search.trim()) ||
+    filters.typeId !== "all" ||
+    filters.status !== "all";
+  const noFilterResults = !isLoading && !isError && isEmpty && hasActiveFilters;
+  const trulyEmpty = isEmpty && !hasActiveFilters;
 
   return (
     <div className="mx-auto flex w-full max-w-[var(--content-max-width)] flex-col gap-6">
@@ -130,17 +125,17 @@ export function AssetsListPage() {
         <KpiStatCard
           compact
           label={t("kpi.totalAssets")}
-          value={assets.length}
+          value={isLoading ? "—" : totalAssets}
         />
         <KpiStatCard
           compact
           label={t("kpi.openActions")}
-          value={openActionsTotal}
+          value={isLoading ? "—" : openActionsTotal}
         />
         <KpiStatCard
           compact
           label={t("kpi.inspectionsLast30Days")}
-          value={inspectionsCount}
+          value={isLoading ? "—" : inspectionsCount}
         />
       </div>
 
@@ -203,7 +198,22 @@ export function AssetsListPage() {
             </tr>
           </thead>
           <tbody>
-            {isEmpty ? (
+            {isLoading ? (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="px-4 py-10 text-center text-body-sm text-muted-foreground"
+                >
+                  {t("loading")}
+                </td>
+              </tr>
+            ) : isError ? (
+              <tr>
+                <td colSpan={6} className="p-0">
+                  <TableEmptyState title={t("loadError")} />
+                </td>
+              </tr>
+            ) : trulyEmpty ? (
               <tr>
                 <td colSpan={6} className="p-0">
                   <TableEmptyState
@@ -230,8 +240,8 @@ export function AssetsListPage() {
                 </td>
               </tr>
             ) : (
-              filtered.map((asset) => {
-                const typeName = getTypeById(asset.typeId)?.name ?? "—";
+              assets.map((asset) => {
+                const typeName = getTypeName(assetTypes, asset.typeId);
                 return (
                   <tr
                     key={asset.id}
