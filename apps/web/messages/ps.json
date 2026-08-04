@@ -38,11 +38,13 @@
     "emptyTableTitle": "تر اوسه هیڅ شتمني نشته",
     "emptyTableDescription": "خپله لومړۍ شتمني اضافه کړئ ترڅو د سازمان تجهیزات تعقیب پیل کړئ.",
     "noFilterResults": "ستاسو فیلترونو سره هیڅ شتمني نه ده موندل شوې",
+    "loading": "په بارولو کې…",
+    "loadError": "ډاټا ونه لوستل شوه. بیا هڅه وکړئ.",
     "viewArchived": "آرشیف وګورئ",
     "kpi": {
       "totalAssets": "ټولې شتمنۍ",
-      "openActions": "خلاصې کړنې",
-      "inspectionsLast30Days": "په تیرو ۳۰ ورځو کې معاینې"
+      "openActions": "خلاصې کړنې (دا پاڼه)",
+      "inspectionsLast30Days": "په تیرو ۳۰ ورځو کې معاینې (دا پاڼه)"
     },
     "filters": {
       "type": "د شتمنۍ ډول",
@@ -109,6 +111,7 @@
       "emptyTitle": "هیڅ آرشیف شوې شتمني نشته",
       "emptyDescription": "آرشیف شوې شتمنۍ به دلته ښکاره شي.",
       "restore": "بیرته راوګرځول",
+      "restoreConflict": "بل فعاله شتمني دغه بېل پېژند لري.",
       "archivedBadge": "آرشیف شوی"
     },
     "settings": {
@@ -150,6 +153,7 @@
       "changeStatus": "حالت بدل کړئ",
       "notFoundTitle": "شتمني ونه موندل شوه",
       "notFoundDescription": "دا شتمني حذف شوې یا لینک ناسم دی.",
+      "actionError": "یوه ستونزه رامنځته شوه. بیا هڅه وکړئ.",
       "backToList": "شتمنیو ته بیرته",
       "tabs": {
         "overview": "عمومي کتنه",

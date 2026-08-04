@@ -2,6 +2,7 @@ export { assetKeys, assetTypeKeys } from "@/features/assets/api/keys";
 export {
   DEFAULT_LIST_ASSETS_QUERY,
   DEFAULT_LIST_ASSET_TYPES_QUERY,
+  filtersToListQuery,
   normalizeListAssetsQuery,
   normalizeListAssetTypesQuery,
 } from "@/features/assets/api/list-query";

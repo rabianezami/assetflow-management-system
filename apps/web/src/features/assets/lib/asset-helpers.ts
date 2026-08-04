@@ -1,39 +1,29 @@
-import type { Asset } from "@/features/assets/types/asset.types";
-
-export function isActiveLifecycle(asset: Asset): boolean {
-  return (asset.lifecycle ?? "active") === "active";
-}
+import type { Asset, AssetType } from "@/features/assets/types/asset.types";
 
 export function isArchivedLifecycle(asset: Asset): boolean {
   return asset.lifecycle === "archived";
 }
 
-/** Pure lookup — returns the store reference, safe for Zustand selectors. */
-export function findAssetById(
-  assets: Asset[],
-  id: string,
-): Asset | undefined {
-  return assets.find((a) => a.id === id);
+export function getTypeName(types: AssetType[], typeId: string): string {
+  return types.find((type) => type.id === typeId)?.name ?? "—";
 }
 
-export function filterActiveAssets(assets: Asset[]): Asset[] {
-  return assets.filter(isActiveLifecycle);
-}
-
-export function filterArchivedAssets(assets: Asset[]): Asset[] {
-  return assets.filter(isArchivedLifecycle);
-}
-
-export function hasDuplicateActiveUniqueId(
-  assets: Asset[],
-  uniqueId: string,
-  excludeId?: string,
-): boolean {
-  const normalized = uniqueId.trim().toLowerCase();
-  return assets.some(
-    (a) =>
-      a.id !== excludeId &&
-      isActiveLifecycle(a) &&
-      a.uniqueId.toLowerCase() === normalized,
+export function formatLastInspection(
+  iso: string | null | undefined,
+  locale: string,
+): string {
+  if (!iso) return "—";
+  return new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(
+    new Date(iso),
   );
+}
+
+export function countRecentInspections(
+  assets: { lastInspectionAt?: string | null }[],
+): number {
+  const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
+  return assets.filter((asset) => {
+    if (!asset.lastInspectionAt) return false;
+    return new Date(asset.lastInspectionAt).getTime() >= cutoff;
+  }).length;
 }

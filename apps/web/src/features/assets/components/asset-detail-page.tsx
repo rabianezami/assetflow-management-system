@@ -10,8 +10,14 @@ import { EmptyState } from "@/components/common/empty-state";
 import { KeyValueCard } from "@/components/common/key-value-card";
 import { SummaryCard } from "@/components/common/summary-card";
 import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  useAsset,
+  useAssetMutations,
+  useAssetTypes,
+} from "@/features/assets/api";
 import { AssetIdentityHeader } from "@/features/assets/components/asset-identity-header";
-import { useAssetsStore } from "@/features/assets/stores/use-assets-store";
+import { isConflictError } from "@/features/assets/lib/api-error";
+import { getTypeName, isArchivedLifecycle } from "@/features/assets/lib/asset-helpers";
 import type { AssetStatus } from "@/features/assets/types/asset.types";
 import { Link, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
@@ -22,16 +28,29 @@ type AssetDetailPageProps = {
 
 export function AssetDetailPageClient({ assetId }: AssetDetailPageProps) {
   const t = useTranslations("Assets.detail");
+  const tAssets = useTranslations("Assets");
   const tStatus = useTranslations("Status");
   const router = useRouter();
-  const asset = useAssetsStore((s) => s.assets.find((a) => a.id === assetId));
-  const getTypeById = useAssetsStore((s) => s.getTypeById);
-  const updateAssetStatus = useAssetsStore((s) => s.updateAssetStatus);
-  const archiveAsset = useAssetsStore((s) => s.archiveAsset);
-  const restoreAsset = useAssetsStore((s) => s.restoreAsset);
   const [tab, setTab] = useState<DetailTab>("overview");
+  const [actionError, setActionError] = useState<string | null>(null);
 
-  if (!asset) {
+  const assetQuery = useAsset(assetId);
+  const typesQuery = useAssetTypes({ limit: 100 });
+  const { updateAsset, archiveAsset, restoreAsset } = useAssetMutations();
+
+  const asset = assetQuery.data;
+  const assetTypes = typesQuery.data?.items ?? [];
+  const isLoading = assetQuery.isLoading || typesQuery.isLoading;
+
+  if (isLoading) {
+    return (
+      <p className="px-4 py-16 text-center text-body-sm text-muted-foreground">
+        {tAssets("loading")}
+      </p>
+    );
+  }
+
+  if (assetQuery.isError || !asset) {
     return (
       <EmptyState
         title={t("notFoundTitle")}
@@ -45,22 +64,56 @@ export function AssetDetailPageClient({ assetId }: AssetDetailPageProps) {
     );
   }
 
-  const typeName = getTypeById(asset.typeId)?.name ?? "—";
-  const isArchived = (asset.lifecycle ?? "active") === "archived";
+  const typeName = getTypeName(assetTypes, asset.typeId);
+  const isArchived = isArchivedLifecycle(asset);
+  const actionPending =
+    updateAsset.isPending || archiveAsset.isPending || restoreAsset.isPending;
 
   const tabs: { id: DetailTab; label: string }[] = [
     { id: "overview", label: t("tabs.overview") },
     { id: "details", label: t("tabs.details") },
   ];
 
-  function handleArchive() {
-    if (archiveAsset(assetId)) {
-      router.push("/assets");
+  async function handleStatusChange(status: AssetStatus) {
+    if (!asset) return;
+    setActionError(null);
+    try {
+      await updateAsset.mutateAsync({
+        id: asset.id,
+        body: {
+          uniqueId: asset.uniqueId,
+          displayName: asset.displayName,
+          typeId: asset.typeId,
+          status,
+          site: asset.site,
+        },
+      });
+    } catch {
+      setActionError(t("actionError"));
     }
   }
 
-  function handleRestore() {
-    restoreAsset(assetId);
+  async function handleArchive() {
+    setActionError(null);
+    try {
+      await archiveAsset.mutateAsync(assetId);
+      router.push("/assets");
+    } catch {
+      setActionError(t("actionError"));
+    }
+  }
+
+  async function handleRestore() {
+    setActionError(null);
+    try {
+      await restoreAsset.mutateAsync(assetId);
+    } catch (error) {
+      setActionError(
+        isConflictError(error)
+          ? tAssets("archived.restoreConflict")
+          : t("actionError"),
+      );
+    }
   }
 
   return (
@@ -79,14 +132,18 @@ export function AssetDetailPageClient({ assetId }: AssetDetailPageProps) {
         </div>
       ) : null}
 
+      {actionError ? (
+        <p className="text-body-sm text-destructive" role="alert">
+          {actionError}
+        </p>
+      ) : null}
+
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <AssetIdentityHeader
           asset={asset}
           typeName={typeName}
-          onStatusChange={(status: AssetStatus) =>
-            updateAssetStatus(asset.id, status)
-          }
-          statusDisabled={isArchived}
+          onStatusChange={(status) => void handleStatusChange(status)}
+          statusDisabled={isArchived || actionPending}
         />
         <div className="flex shrink-0 flex-wrap gap-2">
           {!isArchived ? (
@@ -103,14 +160,20 @@ export function AssetDetailPageClient({ assetId }: AssetDetailPageProps) {
                 variant="outline"
                 size="sm"
                 className="gap-2"
-                onClick={handleArchive}
+                disabled={actionPending}
+                onClick={() => void handleArchive()}
               >
                 <Archive className="size-4" aria-hidden />
                 {t("archive")}
               </Button>
             </>
           ) : (
-            <Button type="button" size="sm" onClick={handleRestore}>
+            <Button
+              type="button"
+              size="sm"
+              disabled={actionPending}
+              onClick={() => void handleRestore()}
+            >
               {t("restore")}
             </Button>
           )}
