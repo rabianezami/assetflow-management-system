@@ -37,6 +37,8 @@
     "emptyTableTitle": "No assets added yet",
     "emptyTableDescription": "Add your first asset to start tracking equipment across your organization.",
     "noFilterResults": "No assets match your filters",
+    "loading": "Loading…",
+    "loadError": "Couldn’t load data. Try again.",
     "viewArchived": "View archived",
     "kpi": {
       "totalAssets": "Total assets",
@@ -98,6 +100,7 @@
       "emptyTitle": "No archived assets",
       "emptyDescription": "Archived assets will appear here.",
       "restore": "Restore",
+      "restoreConflict": "Another active asset already uses this unique ID.",
       "archivedBadge": "Archived"
     },
     "settings": {
@@ -139,6 +142,7 @@
       "changeStatus": "Change status",
       "notFoundTitle": "Asset not found",
       "notFoundDescription": "This asset may have been removed or the link is invalid.",
+      "actionError": "Something went wrong. Try again.",
       "backToList": "Back to assets",
       "tabs": {
         "overview": "Overview",
