@@ -11,7 +11,7 @@
   "scripts": {
     "check-types": "tsc --noEmit",
     "generate": "drizzle-kit generate",
-    "migrate": "drizzle-kit migrate",
+    "migrate": "node ./scripts/check-database.mjs && drizzle-kit migrate",
     "studio": "drizzle-kit studio"
   },
   "dependencies": {
@@ -23,6 +23,7 @@
     "@types/node": "^20",
     "dotenv": "^16.6.1",
     "drizzle-kit": "^0.31.4",
+    "embedded-postgres": "18.4.0-beta.17",
     "typescript": "^5"
   }
 }
