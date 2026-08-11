@@ -47,7 +47,7 @@ next-env.d.ts
 # Cursor local rules
 .cursor/
 
-# Local embedded PostgreSQL data (pnpm db:up fallback)
+# Local DB data leftovers under packages/db (do not commit)
 packages/db/.data/
 
 docs/mvp-scope.md
