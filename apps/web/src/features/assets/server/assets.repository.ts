@@ -12,6 +12,7 @@ import type {
   UpdateAssetBody,
 } from "@/features/assets/contracts/asset.schemas";
 import { badRequest, conflict, notFound } from "@/lib/api/errors";
+import { isUniqueViolation } from "@/lib/db/is-unique-violation";
 
 function escapeIlikePattern(value: string): string {
   return value.replace(/[%_\\]/g, "\\$&");
@@ -42,28 +43,6 @@ async function withUniqueIdConflict<T>(fn: () => Promise<T>): Promise<T> {
     }
     throw error;
   }
-}
-
-function isUniqueViolation(error: unknown): boolean {
-  let current: unknown = error;
-  for (let depth = 0; depth < 5 && current; depth += 1) {
-    if (typeof current !== "object" || current === null) {
-      break;
-    }
-    if ("code" in current && String(current.code) === "23505") {
-      return true;
-    }
-    if ("cause" in current) {
-      current = current.cause;
-      continue;
-    }
-    if ("errors" in current && Array.isArray(current.errors)) {
-      current = current.errors[0];
-      continue;
-    }
-    break;
-  }
-  return false;
 }
 
 export async function listAssets(query: ListAssetsQuery) {

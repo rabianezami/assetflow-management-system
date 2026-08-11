@@ -1,6 +1,7 @@
 export type ApiErrorCode =
   | "BAD_REQUEST"
   | "VALIDATION_ERROR"
+  | "UNAUTHORIZED"
   | "NOT_FOUND"
   | "CONFLICT"
   | "INTERNAL_ERROR";
@@ -30,6 +31,10 @@ export function badRequest(message: string, details?: unknown) {
 
 export function validationError(message: string, details?: unknown) {
   return new ApiError("VALIDATION_ERROR", message, 400, details);
+}
+
+export function unauthorized(message = "Authentication required") {
+  return new ApiError("UNAUTHORIZED", message, 401);
 }
 
 export function notFound(message: string) {
