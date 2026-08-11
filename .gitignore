@@ -47,4 +47,7 @@ next-env.d.ts
 # Cursor local rules
 .cursor/
 
+# Local DB data leftovers under packages/db (do not commit)
+packages/db/.data/
+
 docs/mvp-scope.md

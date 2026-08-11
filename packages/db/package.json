@@ -11,7 +11,7 @@
   "scripts": {
     "check-types": "tsc --noEmit",
     "generate": "drizzle-kit generate",
-    "migrate": "drizzle-kit migrate",
+    "migrate": "node ./scripts/check-database.mjs && drizzle-kit migrate",
     "studio": "drizzle-kit studio"
   },
   "dependencies": {

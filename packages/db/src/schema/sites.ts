@@ -1,26 +1,25 @@
 import { index, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
-import { DEFAULT_ORGANIZATION_ID } from "./constants";
 import { organizations } from "./organizations";
 
-export const assetTypes = pgTable(
-  "asset_types",
+export const sites = pgTable(
+  "sites",
   {
     id: uuid("id").defaultRandom().primaryKey(),
     organizationId: uuid("organization_id")
       .notNull()
-      .default(DEFAULT_ORGANIZATION_ID)
       .references(() => organizations.id),
     name: text("name").notNull(),
-    statusGroup: text("status_group").notNull().default(""),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
       .notNull()
       .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date().toISOString()),
   },
-  (table) => [
-    index("asset_types_organization_id_idx").on(table.organizationId),
-  ],
+  (table) => [index("sites_organization_id_idx").on(table.organizationId)],
 );
 
-export type AssetTypeRow = typeof assetTypes.$inferSelect;
-export type NewAssetTypeRow = typeof assetTypes.$inferInsert;
+export type SiteRow = typeof sites.$inferSelect;
+export type NewSiteRow = typeof sites.$inferInsert;
