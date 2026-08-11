@@ -10,18 +10,25 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { assetTypes } from "./asset-types";
+import { DEFAULT_ORGANIZATION_ID } from "./constants";
 import { assetLifecycleEnum, assetStatusEnum } from "./enums";
+import { organizations } from "./organizations";
 
 export const assets = pgTable(
   "assets",
   {
     id: uuid("id").defaultRandom().primaryKey(),
+    organizationId: uuid("organization_id")
+      .notNull()
+      .default(DEFAULT_ORGANIZATION_ID)
+      .references(() => organizations.id),
     uniqueId: text("unique_id").notNull(),
     displayName: text("display_name").notNull().default(""),
     typeId: uuid("type_id")
       .notNull()
       .references(() => assetTypes.id),
     status: assetStatusEnum("status").notNull().default("active"),
+    /** Free-text site until Phase 3 Task 6 wires `sites`. */
     site: text("site").notNull().default(""),
     lifecycle: assetLifecycleEnum("lifecycle").notNull().default("active"),
     archivedAt: timestamp("archived_at", {
@@ -43,12 +50,13 @@ export const assets = pgTable(
       .$onUpdate(() => new Date().toISOString()),
   },
   (table) => [
-    // Matches Phase 1: unique among active assets, case-insensitive.
-    uniqueIndex("assets_unique_id_active_idx")
-      .using("btree", sql`lower(${table.uniqueId})`)
+    // Unique among active assets within an organization (case-insensitive).
+    uniqueIndex("assets_org_unique_id_active_idx")
+      .using("btree", table.organizationId, sql`lower(${table.uniqueId})`)
       .where(sql`${table.lifecycle} = 'active'`),
     index("assets_lifecycle_idx").on(table.lifecycle),
     index("assets_type_id_idx").on(table.typeId),
+    index("assets_organization_id_idx").on(table.organizationId),
   ],
 );
 

@@ -14,3 +14,10 @@ export const assetLifecycleEnum = pgEnum("asset_lifecycle", [
   "active",
   "archived",
 ]);
+
+/** Organization membership roles (Phase 3). */
+export const membershipRoleEnum = pgEnum("membership_role", [
+  "owner",
+  "admin",
+  "member",
+]);

@@ -13,6 +13,8 @@
     "lint": "turbo lint",
     "check-types": "turbo check-types",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "db:up": "node packages/db/scripts/db-up.mjs",
+    "db:down": "node packages/db/scripts/db-down.mjs",
     "db:generate": "pnpm --filter @repo/db generate",
     "db:migrate": "pnpm --filter @repo/db migrate",
     "db:studio": "pnpm --filter @repo/db studio"
@@ -21,5 +23,10 @@
     "prettier": "^3.4.2",
     "turbo": "^2.10.5",
     "typescript": "^5"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@embedded-postgres/windows-x64"
+    ]
   }
 }
