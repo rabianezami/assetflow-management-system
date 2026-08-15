@@ -18,12 +18,17 @@ function escapeIlikePattern(value: string): string {
   return value.replace(/[%_\\]/g, "\\$&");
 }
 
-async function assertTypeExists(typeId: string) {
+async function assertTypeExists(organizationId: string, typeId: string) {
   const db = getDb();
   const [type] = await db
     .select({ id: assetTypes.id })
     .from(assetTypes)
-    .where(eq(assetTypes.id, typeId))
+    .where(
+      and(
+        eq(assetTypes.id, typeId),
+        eq(assetTypes.organizationId, organizationId),
+      ),
+    )
     .limit(1);
 
   if (!type) {
@@ -45,10 +50,13 @@ async function withUniqueIdConflict<T>(fn: () => Promise<T>): Promise<T> {
   }
 }
 
-export async function listAssets(query: ListAssetsQuery) {
+export async function listAssets(
+  organizationId: string,
+  query: ListAssetsQuery,
+) {
   const db = getDb();
   const offset = (query.page - 1) * query.limit;
-  const conditions: SQL[] = [];
+  const conditions: SQL[] = [eq(assets.organizationId, organizationId)];
 
   if (query.lifecycle !== "all") {
     conditions.push(eq(assets.lifecycle, query.lifecycle));
@@ -67,7 +75,7 @@ export async function listAssets(query: ListAssetsQuery) {
     );
   }
 
-  const where = conditions.length > 0 ? and(...conditions) : undefined;
+  const where = and(...conditions);
 
   const [rows, totals] = await Promise.all([
     db
@@ -88,24 +96,31 @@ export async function listAssets(query: ListAssetsQuery) {
   };
 }
 
-export async function getAssetById(id: string): Promise<AssetRow | undefined> {
+export async function getAssetById(
+  organizationId: string,
+  id: string,
+): Promise<AssetRow | undefined> {
   const db = getDb();
   const [row] = await db
     .select()
     .from(assets)
-    .where(eq(assets.id, id))
+    .where(and(eq(assets.id, id), eq(assets.organizationId, organizationId)))
     .limit(1);
   return row;
 }
 
-export async function createAsset(input: CreateAssetBody): Promise<AssetRow> {
-  await assertTypeExists(input.typeId);
+export async function createAsset(
+  organizationId: string,
+  input: CreateAssetBody,
+): Promise<AssetRow> {
+  await assertTypeExists(organizationId, input.typeId);
 
   return withUniqueIdConflict(async () => {
     const db = getDb();
     const [row] = await db
       .insert(assets)
       .values({
+        organizationId,
         uniqueId: input.uniqueId.trim(),
         displayName: input.displayName?.trim() ?? "",
         typeId: input.typeId,
@@ -126,10 +141,11 @@ export async function createAsset(input: CreateAssetBody): Promise<AssetRow> {
 }
 
 export async function updateAsset(
+  organizationId: string,
   id: string,
   input: UpdateAssetBody,
 ): Promise<AssetRow> {
-  const existing = await getAssetById(id);
+  const existing = await getAssetById(organizationId, id);
   if (!existing) {
     throw notFound("Asset not found");
   }
@@ -137,7 +153,7 @@ export async function updateAsset(
     throw conflict("Archived assets cannot be edited. Restore the asset first.");
   }
 
-  await assertTypeExists(input.typeId);
+  await assertTypeExists(organizationId, input.typeId);
 
   return withUniqueIdConflict(async () => {
     const db = getDb();
@@ -150,7 +166,7 @@ export async function updateAsset(
         status: input.status,
         site: input.site?.trim() ?? "",
       })
-      .where(eq(assets.id, id))
+      .where(and(eq(assets.id, id), eq(assets.organizationId, organizationId)))
       .returning();
 
     if (!row) {
@@ -160,8 +176,11 @@ export async function updateAsset(
   });
 }
 
-export async function archiveAsset(id: string): Promise<AssetRow> {
-  const existing = await getAssetById(id);
+export async function archiveAsset(
+  organizationId: string,
+  id: string,
+): Promise<AssetRow> {
+  const existing = await getAssetById(organizationId, id);
   if (!existing) {
     throw notFound("Asset not found");
   }
@@ -177,7 +196,7 @@ export async function archiveAsset(id: string): Promise<AssetRow> {
       lifecycle: "archived",
       archivedAt: now,
     })
-    .where(eq(assets.id, id))
+    .where(and(eq(assets.id, id), eq(assets.organizationId, organizationId)))
     .returning();
 
   if (!row) {
@@ -186,8 +205,11 @@ export async function archiveAsset(id: string): Promise<AssetRow> {
   return row;
 }
 
-export async function restoreAsset(id: string): Promise<AssetRow> {
-  const existing = await getAssetById(id);
+export async function restoreAsset(
+  organizationId: string,
+  id: string,
+): Promise<AssetRow> {
+  const existing = await getAssetById(organizationId, id);
   if (!existing) {
     throw notFound("Asset not found");
   }
@@ -203,7 +225,7 @@ export async function restoreAsset(id: string): Promise<AssetRow> {
         lifecycle: "active",
         archivedAt: null,
       })
-      .where(eq(assets.id, id))
+      .where(and(eq(assets.id, id), eq(assets.organizationId, organizationId)))
       .returning();
 
     if (!row) {
