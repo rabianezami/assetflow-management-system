@@ -6,7 +6,10 @@ import {
 } from "@repo/db";
 import { sql } from "drizzle-orm";
 
-import type { SignupBody } from "@/features/auth/contracts/auth.schemas";
+import type {
+  SignupBody,
+  SignupResult,
+} from "@/features/auth/contracts/auth.schemas";
 import { hashPassword } from "@/features/auth/server/password";
 import { conflict } from "@/lib/api/errors";
 import { isUniqueViolation } from "@/lib/db/is-unique-violation";
@@ -40,18 +43,6 @@ export async function findCredentialsByEmail(
     .limit(1);
   return user;
 }
-
-export type SignupResult = {
-  user: {
-    id: string;
-    email: string;
-    name: string;
-  };
-  organization: {
-    id: string;
-    name: string;
-  };
-};
 
 /** Create user + organization + owner membership in one transaction. */
 export async function signupUser(body: SignupBody): Promise<SignupResult> {
