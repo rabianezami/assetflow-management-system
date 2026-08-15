@@ -1,5 +1,5 @@
 import { getDb, assetTypes, assets, type AssetTypeRow } from "@repo/db";
-import { count, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq } from "drizzle-orm";
 
 import type {
   CreateAssetTypeBody,
@@ -8,18 +8,23 @@ import type {
 } from "@/features/assets/contracts/asset-type.schemas";
 import { conflict, notFound } from "@/lib/api/errors";
 
-export async function listAssetTypes(query: ListAssetTypesQuery) {
+export async function listAssetTypes(
+  organizationId: string,
+  query: ListAssetTypesQuery,
+) {
   const db = getDb();
   const offset = (query.page - 1) * query.limit;
+  const where = eq(assetTypes.organizationId, organizationId);
 
   const [rows, totals] = await Promise.all([
     db
       .select()
       .from(assetTypes)
+      .where(where)
       .orderBy(desc(assetTypes.createdAt))
       .limit(query.limit)
       .offset(offset),
-    db.select({ total: count() }).from(assetTypes),
+    db.select({ total: count() }).from(assetTypes).where(where),
   ]);
 
   return {
@@ -31,24 +36,29 @@ export async function listAssetTypes(query: ListAssetTypesQuery) {
 }
 
 export async function getAssetTypeById(
+  organizationId: string,
   id: string,
 ): Promise<AssetTypeRow | undefined> {
   const db = getDb();
   const [row] = await db
     .select()
     .from(assetTypes)
-    .where(eq(assetTypes.id, id))
+    .where(
+      and(eq(assetTypes.id, id), eq(assetTypes.organizationId, organizationId)),
+    )
     .limit(1);
   return row;
 }
 
 export async function createAssetType(
+  organizationId: string,
   input: CreateAssetTypeBody,
 ): Promise<AssetTypeRow> {
   const db = getDb();
   const [row] = await db
     .insert(assetTypes)
     .values({
+      organizationId,
       name: input.name.trim(),
       statusGroup: input.statusGroup?.trim() ?? "",
     })
@@ -61,10 +71,11 @@ export async function createAssetType(
 }
 
 export async function updateAssetType(
+  organizationId: string,
   id: string,
   input: UpdateAssetTypeBody,
 ): Promise<AssetTypeRow> {
-  const existing = await getAssetTypeById(id);
+  const existing = await getAssetTypeById(organizationId, id);
   if (!existing) {
     throw notFound("Asset type not found");
   }
@@ -76,7 +87,9 @@ export async function updateAssetType(
       name: input.name.trim(),
       statusGroup: input.statusGroup?.trim() ?? "",
     })
-    .where(eq(assetTypes.id, id))
+    .where(
+      and(eq(assetTypes.id, id), eq(assetTypes.organizationId, organizationId)),
+    )
     .returning();
 
   if (!row) {
@@ -85,8 +98,11 @@ export async function updateAssetType(
   return row;
 }
 
-export async function deleteAssetType(id: string): Promise<void> {
-  const existing = await getAssetTypeById(id);
+export async function deleteAssetType(
+  organizationId: string,
+  id: string,
+): Promise<void> {
+  const existing = await getAssetTypeById(organizationId, id);
   if (!existing) {
     throw notFound("Asset type not found");
   }
@@ -95,7 +111,9 @@ export async function deleteAssetType(id: string): Promise<void> {
   const [usage] = await db
     .select({ total: count() })
     .from(assets)
-    .where(eq(assets.typeId, id));
+    .where(
+      and(eq(assets.typeId, id), eq(assets.organizationId, organizationId)),
+    );
 
   if ((usage?.total ?? 0) > 0) {
     throw conflict(
@@ -104,5 +122,9 @@ export async function deleteAssetType(id: string): Promise<void> {
     );
   }
 
-  await db.delete(assetTypes).where(eq(assetTypes.id, id));
+  await db
+    .delete(assetTypes)
+    .where(
+      and(eq(assetTypes.id, id), eq(assetTypes.organizationId, organizationId)),
+    );
 }

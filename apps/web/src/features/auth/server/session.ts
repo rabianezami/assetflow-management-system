@@ -3,7 +3,7 @@ import { unauthorized } from "@/lib/api/errors";
 
 /**
  * Authenticated identity from the Auth.js session.
- * Org/role belong in a separate membership helper (Task 3+) — not here.
+ * Organization comes from requireOrganizationContext() (memberships).
  */
 export type SessionUser = {
   id: string;
