@@ -1,4 +1,4 @@
-import { LayoutDashboard } from "lucide-react";
+import { Package } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { EmptyState } from "@/components/common/empty-state";
@@ -20,16 +20,12 @@ export default async function DashboardPage({ params }: Props) {
     <div className="mx-auto flex w-full max-w-[var(--content-max-width)] flex-col gap-8">
       <PageHeader title={t("title")} description={t("description")} />
       <EmptyState
-        icon={<LayoutDashboard className="size-6" />}
+        icon={<Package className="size-6" />}
         title={t("emptyTitle")}
         description={t("emptyDescription")}
         action={
-          <Button
-            nativeButton={false}
-            render={<Link href="/" />}
-            variant="outline"
-          >
-            {t("backHome")}
+          <Button nativeButton={false} render={<Link href="/assets" />}>
+            {t("goToAssets")}
           </Button>
         }
       />

@@ -6,6 +6,7 @@ import { LocaleSwitcher } from "@/components/common/locale-switcher";
 import { ThemeToggle } from "@/components/common/theme-toggle";
 import { AppHeader } from "@/components/layout/app-header";
 import { AppSidebar } from "@/components/layout/app-sidebar";
+import { SignOutButton } from "@/features/auth/components/sign-out-button";
 
 type AppShellProps = {
   children: ReactNode;
@@ -24,6 +25,7 @@ export function AppShell({ children }: AppShellProps) {
         <AppHeader>
           <LocaleSwitcher />
           <ThemeToggle />
+          <SignOutButton />
         </AppHeader>
         <main className="flex-1 overflow-auto px-[var(--page-padding-x)] py-[var(--page-padding-y)]">
           {children}

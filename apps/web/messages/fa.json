@@ -189,16 +189,33 @@
   },
   "Auth": {
     "loginTitle": "ورود",
-    "loginDescription": "احراز هویت در فاز بعدی پیاده‌سازی می‌شود. این یک placeholder چیدمان است.",
-    "continuePlaceholder": "ادامه به داشبورد",
+    "loginDescription": "برای مدیریت دارایی‌های سازمان خود وارد شوید.",
+    "signupTitle": "ایجاد حساب",
+    "signupDescription": "حساب و سازمان خود را بسازید تا شروع کنید.",
+    "email": "ایمیل",
+    "password": "رمز عبور",
+    "passwordHint": "حداقل ۸ کاراکتر",
+    "name": "نام کامل",
+    "organizationName": "نام سازمان",
+    "signIn": "ورود",
+    "signingIn": "در حال ورود…",
+    "signOut": "خروج",
+    "createAccount": "ایجاد حساب",
+    "creatingAccount": "در حال ایجاد حساب…",
+    "noAccount": "حساب ندارید؟",
+    "hasAccount": "قبلاً حساب دارید؟",
+    "invalidCredentials": "ایمیل یا رمز عبور نامعتبر است.",
+    "emailTaken": "حسابی با این ایمیل از قبل وجود دارد.",
+    "signupFailed": "ایجاد حساب ممکن نشد. دوباره تلاش کنید.",
+    "signupSuccess": "حساب ایجاد شد. برای ادامه وارد شوید.",
     "backHome": "بازگشت به خانه"
   },
   "Dashboard": {
     "title": "داشبورد",
     "description": "نمای کلی از دارایی‌ها و عملیات سازمان شما.",
-    "emptyTitle": "هنوز ویجت داشبورد وجود ندارد",
-    "emptyDescription": "ماژول‌های ویژگی این بخش را در فازهای بعد پر می‌کنند.",
-    "backHome": "بازگشت به خانه"
+    "emptyTitle": "وارد شده‌اید",
+    "emptyDescription": "با مرور دارایی‌ها شروع کنید یا اولین دارایی را اضافه کنید.",
+    "goToAssets": "رفتن به دارایی‌ها"
   },
   "Admin": {
     "title": "مدیریت پلتفرم",

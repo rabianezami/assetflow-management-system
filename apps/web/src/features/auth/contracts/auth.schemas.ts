@@ -9,6 +9,18 @@ export const signupBodySchema = z.object({
 
 export type SignupBody = z.infer<typeof signupBodySchema>;
 
+export type SignupResult = {
+  user: {
+    id: string;
+    email: string;
+    name: string;
+  };
+  organization: {
+    id: string;
+    name: string;
+  };
+};
+
 export const credentialsSchema = z.object({
   email: z.string().trim().email(),
   password: z.string().min(1),

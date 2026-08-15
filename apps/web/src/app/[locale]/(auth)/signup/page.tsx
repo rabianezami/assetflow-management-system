@@ -1,31 +1,23 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { PageHeader } from "@/components/common/page-header";
-import { LoginForm } from "@/features/auth/components/login-form";
+import { SignupForm } from "@/features/auth/components/signup-form";
 import { Link } from "@/i18n/navigation";
 
 type Props = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ registered?: string }>;
 };
 
-export default async function LoginPage({ params, searchParams }: Props) {
+export default async function SignupPage({ params }: Props) {
   const { locale } = await params;
-  const { registered } = await searchParams;
   setRequestLocale(locale);
 
   const t = await getTranslations("Auth");
-  const justRegistered = registered === "1";
 
   return (
     <div className="flex flex-col gap-6 rounded-xl border border-border bg-card p-8 shadow-sm">
-      <PageHeader title={t("loginTitle")} description={t("loginDescription")} />
-      {justRegistered ? (
-        <p className="text-body-sm text-muted-foreground" role="status">
-          {t("signupSuccess")}
-        </p>
-      ) : null}
-      <LoginForm />
+      <PageHeader title={t("signupTitle")} description={t("signupDescription")} />
+      <SignupForm />
       <p className="text-center text-body-sm">
         <Link
           href="/"
