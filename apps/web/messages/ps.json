@@ -189,16 +189,33 @@
   },
   "Auth": {
     "loginTitle": "ننوتل",
-    "loginDescription": "تصدیق به راتلونکي پړاو کې پلي کیږي. دا د layout placeholder دی.",
-    "continuePlaceholder": "ډشبورډ ته دوام ورکړئ",
+    "loginDescription": "د خپل سازمان شتمنیو د مدیریت لپاره ننوځئ.",
+    "signupTitle": "حساب جوړ کړئ",
+    "signupDescription": "خپل حساب او سازمان جوړ کړئ ترڅو پیل وکړئ.",
+    "email": "بریښنالیک",
+    "password": "پټنوم",
+    "passwordHint": "لږ تر لږه ۸ توري",
+    "name": "بشپړ نوم",
+    "organizationName": "د سازمان نوم",
+    "signIn": "ننوتل",
+    "signingIn": "ننوتل کیږي…",
+    "signOut": "وتل",
+    "createAccount": "حساب جوړ کړئ",
+    "creatingAccount": "حساب جوړیږي…",
+    "noAccount": "حساب نه لرئ؟",
+    "hasAccount": "دمخه حساب لرئ؟",
+    "invalidCredentials": "بریښنالیک یا پټنوم ناسم دی.",
+    "emailTaken": "د دې بریښنالیک سره حساب دممخه شتون لري.",
+    "signupFailed": "حساب جوړ نشو. بیا هڅه وکړئ.",
+    "signupSuccess": "حساب جوړ شو. د دوام لپاره ننوځئ.",
     "backHome": "کور ته بیرته"
   },
   "Dashboard": {
     "title": "ډشبورډ",
     "description": "ستاسو د سازمان شتمنیو او عملیاتو عمومي کتنه.",
-    "emptyTitle": "تر اوسه د ډشبورډ ویجټونه نشته",
-    "emptyDescription": "د ځانګړتیاو ماډلونه به دا برخه په راتلونکو پړاوونو کې ډک کړي.",
-    "backHome": "کور ته بیرته"
+    "emptyTitle": "تاسو ننوتلي یاست",
+    "emptyDescription": "د خپلو شتمنیو په کتلو پیل وکړئ، یا لومړۍ شتمني اضافه کړئ.",
+    "goToAssets": "شتمنیو ته لاړ شئ"
   },
   "Admin": {
     "title": "د پلیټفارم ادمین",
