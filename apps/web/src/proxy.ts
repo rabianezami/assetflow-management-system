@@ -34,7 +34,12 @@ function isAuthPath(path: string): boolean {
   return path === "/login" || path === "/signup";
 }
 
-const PROTECTED_PREFIXES = ["/dashboard", "/assets", "/admin"] as const;
+const PROTECTED_PREFIXES = [
+  "/dashboard",
+  "/assets",
+  "/admin",
+  "/settings",
+] as const;
 
 function isProtectedPath(path: string): boolean {
   return PROTECTED_PREFIXES.some((prefix) => matchesPathPrefix(path, prefix));

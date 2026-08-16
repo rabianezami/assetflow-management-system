@@ -1,8 +1,13 @@
-import { LayoutDashboard, Package, type LucideIcon } from "lucide-react";
+import {
+  LayoutDashboard,
+  Package,
+  Settings,
+  type LucideIcon,
+} from "lucide-react";
 
 export type DashboardNavItem = {
   href: string;
-  labelKey: "dashboard" | "assets";
+  labelKey: "dashboard" | "assets" | "settings";
   icon: LucideIcon;
 };
 
@@ -10,4 +15,5 @@ export type DashboardNavItem = {
 export const dashboardNavItems: DashboardNavItem[] = [
   { href: "/dashboard", labelKey: "dashboard", icon: LayoutDashboard },
   { href: "/assets", labelKey: "assets", icon: Package },
+  { href: "/settings", labelKey: "settings", icon: Settings },
 ];
