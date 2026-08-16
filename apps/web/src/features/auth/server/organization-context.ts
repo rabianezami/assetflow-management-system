@@ -1,4 +1,4 @@
-import { getDb, memberships } from "@repo/db";
+import { getDb, memberships, type MembershipRow } from "@repo/db";
 import { asc, eq } from "drizzle-orm";
 
 import { requireUser } from "@/features/auth/server/session";
@@ -7,6 +7,7 @@ import { forbidden } from "@/lib/api/errors";
 export type OrganizationContext = {
   userId: string;
   organizationId: string;
+  role: MembershipRow["role"];
 };
 
 /**
@@ -20,6 +21,7 @@ export async function requireOrganizationContext(): Promise<OrganizationContext>
   const [membership] = await db
     .select({
       organizationId: memberships.organizationId,
+      role: memberships.role,
     })
     .from(memberships)
     .where(eq(memberships.userId, user.id))
@@ -33,5 +35,6 @@ export async function requireOrganizationContext(): Promise<OrganizationContext>
   return {
     userId: user.id,
     organizationId: membership.organizationId,
+    role: membership.role,
   };
 }
