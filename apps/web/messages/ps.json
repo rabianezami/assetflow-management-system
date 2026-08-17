@@ -19,6 +19,7 @@
     "main": "اصلي نیویګیشن",
     "dashboard": "ډشبورډ",
     "assets": "شتمنۍ",
+    "settings": "تنظیمات",
     "collapse": "اړخ پټه جمع کړئ"
   },
   "Status": {
@@ -222,5 +223,44 @@
     "description": "د پلیټفارم کچې administracion لپاره ساتل شوی.",
     "layoutNotice": "د ادمین route group (stub) — د tenant dashboard shell څخه جلا.",
     "backToDashboard": "ډشبورډ ته بیرته"
+  },
+  "Organization": {
+    "loading": "بارېږي…",
+    "loadError": "د سازمان معلومات بار نشول.",
+    "name": "د سازمان نوم",
+    "save": "بدلونونه خوندي کړئ",
+    "saving": "خوندي کیږي…",
+    "saved": "سازمان تازه شو.",
+    "saveFailed": "سازمان تازه نشو.",
+    "readOnly": "یوازې مالک او ادمین کولی شي سازمان سمون کړي.",
+    "roles": {
+      "owner": "مالک",
+      "admin": "ادمین",
+      "member": "غړی"
+    },
+    "settings": {
+      "title": "د سازمان تنظیمات",
+      "tabsLabel": "د تنظیماتو برخې",
+      "organizationTab": "سازمان",
+      "membersTab": "غړي",
+      "backToDashboard": "ډشبورډ ته بیرته"
+    },
+    "members": {
+      "addTitle": "غړی اضافه کړئ",
+      "name": "نوم",
+      "email": "بریښنالیک",
+      "password": "پټنوم",
+      "role": "رول",
+      "actions": "کړنې",
+      "addSubmit": "غړی اضافه کړئ",
+      "adding": "اضافه کیږي…",
+      "remove": "لرې کړئ",
+      "emailTaken": "د دې بریښنالیک سره حساب دممخه شتون لري.",
+      "addFailed": "غړی اضافه نشو.",
+      "updateFailed": "غړی تازه نشو.",
+      "removeFailed": "غړی لرې نشو.",
+      "emptyTitle": "تر اوسه غړي نشته",
+      "emptyDescription": "ټیم ملګري اضافه کړئ ترڅو دې سازمان ته لاسرسی ولري."
+    }
   }
 }

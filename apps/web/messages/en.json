@@ -19,6 +19,7 @@
     "main": "Main navigation",
     "dashboard": "Dashboard",
     "assets": "Assets",
+    "settings": "Settings",
     "collapse": "Collapse sidebar"
   },
   "Status": {
@@ -211,5 +212,44 @@
     "description": "Reserved for platform-level administration.",
     "layoutNotice": "Admin route group (stub) — separate from the tenant dashboard shell.",
     "backToDashboard": "Back to dashboard"
+  },
+  "Organization": {
+    "loading": "Loading…",
+    "loadError": "Could not load organization data.",
+    "name": "Organization name",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "saved": "Organization updated.",
+    "saveFailed": "Could not update the organization.",
+    "readOnly": "Only owners and admins can edit the organization.",
+    "roles": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "member": "Member"
+    },
+    "settings": {
+      "title": "Organization settings",
+      "tabsLabel": "Settings sections",
+      "organizationTab": "Organization",
+      "membersTab": "Members",
+      "backToDashboard": "Back to dashboard"
+    },
+    "members": {
+      "addTitle": "Add member",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "role": "Role",
+      "actions": "Actions",
+      "addSubmit": "Add member",
+      "adding": "Adding…",
+      "remove": "Remove",
+      "emailTaken": "An account with this email already exists.",
+      "addFailed": "Could not add the member.",
+      "updateFailed": "Could not update the member.",
+      "removeFailed": "Could not remove the member.",
+      "emptyTitle": "No members yet",
+      "emptyDescription": "Add teammates so they can access this organization."
+    }
   }
 }
