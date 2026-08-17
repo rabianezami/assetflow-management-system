@@ -6,6 +6,7 @@ import { FileDropzone } from "@/components/common/file-dropzone";
 import { Input, Label, Select } from "@/components/ui/input";
 import type { AssetStatus } from "@/features/assets/types/asset.types";
 import type { AssetType } from "@/features/assets/types/asset.types";
+import type { Site } from "@/features/sites/api/sites";
 
 const STATUSES: AssetStatus[] = [
   "active",
@@ -20,11 +21,12 @@ export type AssetFormValues = {
   displayName: string;
   typeId: string;
   status: AssetStatus;
-  site: string;
+  siteId: string;
 };
 
 type AssetFormFieldsProps = {
   assetTypes: AssetType[];
+  sites: Site[];
   values: AssetFormValues;
   onChange: (values: AssetFormValues) => void;
   showPhoto?: boolean;
@@ -32,6 +34,7 @@ type AssetFormFieldsProps = {
 
 export function AssetFormFields({
   assetTypes,
+  sites,
   values,
   onChange,
   showPhoto = true,
@@ -110,10 +113,15 @@ export function AssetFormFields({
         <Label htmlFor="site">{t("site")}</Label>
         <Select
           id="site"
-          value={values.site}
-          onChange={(e) => patch({ site: e.target.value })}
+          value={values.siteId}
+          onChange={(e) => patch({ siteId: e.target.value })}
         >
           <option value="">{t("sitePlaceholder")}</option>
+          {sites.map((site) => (
+            <option key={site.id} value={site.id}>
+              {site.name}
+            </option>
+          ))}
         </Select>
       </div>
     </>
