@@ -22,7 +22,7 @@ import {
   AssetTableFilters,
   type AssetTableFiltersState,
 } from "@/features/assets/components/asset-table-filters";
-import { isConflictError } from "@/features/assets/lib/api-error";
+import { isConflictError } from "@/lib/api/client";
 import {
   countRecentInspections,
   formatLastInspection,

@@ -15,8 +15,9 @@ import {
   AssetFormFields,
   type AssetFormValues,
 } from "@/features/assets/components/asset-form-fields";
-import { isConflictError } from "@/features/assets/lib/api-error";
+import { isConflictError } from "@/lib/api/client";
 import { isArchivedLifecycle } from "@/features/assets/lib/asset-helpers";
+import { useSites } from "@/features/sites/api";
 import { Link, useRouter } from "@/i18n/navigation";
 import { Card } from "@repo/ui/card";
 
@@ -33,6 +34,7 @@ export function EditAssetFormPage({ assetId }: EditAssetFormPageProps) {
 
   const assetQuery = useAsset(assetId);
   const typesQuery = useAssetTypes({ limit: 100 });
+  const sitesQuery = useSites({ limit: 100 });
   const { updateAsset } = useAssetMutations();
 
   const [values, setValues] = useState<AssetFormValues | null>(null);
@@ -47,12 +49,12 @@ export function EditAssetFormPage({ assetId }: EditAssetFormPageProps) {
         displayName: asset.displayName,
         typeId: asset.typeId,
         status: asset.status,
-        site: asset.site,
+        siteId: asset.siteId ?? "",
       });
     }
   }, [asset]);
 
-  if (assetQuery.isLoading || typesQuery.isLoading) {
+  if (assetQuery.isLoading || typesQuery.isLoading || sitesQuery.isLoading) {
     return (
       <p className="px-4 py-16 text-center text-body-sm text-muted-foreground">
         {tAssets("loading")}
@@ -87,7 +89,16 @@ export function EditAssetFormPage({ assetId }: EditAssetFormPageProps) {
     );
   }
 
+  if (typesQuery.isError || sitesQuery.isError) {
+    return (
+      <p className="px-4 py-16 text-center text-body-sm text-destructive" role="alert">
+        {tAssets("loadError")}
+      </p>
+    );
+  }
+
   const assetTypes = typesQuery.data?.items ?? [];
+  const sites = sitesQuery.data?.items ?? [];
 
   if (!values) return null;
 
@@ -103,7 +114,7 @@ export function EditAssetFormPage({ assetId }: EditAssetFormPageProps) {
           displayName: values.displayName || undefined,
           typeId: values.typeId,
           status: values.status,
-          site: values.site || undefined,
+          siteId: values.siteId || null,
         },
       });
       router.push(`/assets/${assetId}`);
@@ -122,6 +133,7 @@ export function EditAssetFormPage({ assetId }: EditAssetFormPageProps) {
         <form onSubmit={(e) => void handleSubmit(e)} className="flex flex-col gap-5">
           <AssetFormFields
             assetTypes={assetTypes}
+            sites={sites}
             values={values}
             onChange={setValues}
             showPhoto={false}

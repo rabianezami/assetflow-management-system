@@ -119,8 +119,9 @@
       "title": "تنظیمات دارایی",
       "backToAssets": "بازگشت به دارایی‌ها",
       "tabsLabel": "بخش‌های تنظیمات",
+      "typesTab": "انواع",
+      "sitesTab": "سایت‌ها",
       "types": {
-        "tab": "انواع",
         "manageTitle": "مدیریت انواع",
         "createType": "+ ایجاد نوع",
         "emptyTitle": "نوع دارایی وجود ندارد",
@@ -141,6 +142,28 @@
           "name": "نام نوع",
           "statusGroup": "گروه وضعیت",
           "assetCount": "دارایی‌ها",
+          "actions": "عملیات"
+        }
+      },
+      "sites": {
+        "manageTitle": "مدیریت سایت‌ها",
+        "createSite": "+ ایجاد سایت",
+        "emptyTitle": "سایتی وجود ندارد",
+        "emptyDescription": "برای اختصاص دارایی‌ها به مکان، سایت‌های سازمان را ایجاد کنید.",
+        "createModalTitle": "ایجاد سایت جدید",
+        "editModalTitle": "ویرایش سایت",
+        "siteName": "نام سایت",
+        "siteNamePlaceholder": "نام سایت را وارد کنید",
+        "cancel": "لغو",
+        "create": "ایجاد",
+        "save": "ذخیره تغییرات",
+        "edit": "ویرایش",
+        "delete": "حذف",
+        "deleteBlocked": "سایتی که دارایی به آن اختصاص دارد قابل حذف نیست. ابتدا دارایی‌ها را منتقل کنید.",
+        "nameTaken": "سایتی با این نام از قبل وجود دارد.",
+        "saveFailed": "ذخیره سایت ممکن نشد.",
+        "columns": {
+          "name": "نام سایت",
           "actions": "عملیات"
         }
       }

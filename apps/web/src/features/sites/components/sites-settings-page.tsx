@@ -1,49 +1,42 @@
 "use client";
 
-import { ClipboardList } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { EmptyState } from "@/components/common/empty-state";
 import { SettingsLayout } from "@/components/common/settings-layout";
 import { Button } from "@/components/ui/button";
-import {
-  useAssetTypeMutations,
-  useAssetTypes,
-} from "@/features/assets/api";
 import { AssetsSettingsTabs } from "@/features/assets/components/assets-settings-tabs";
-import { TypeFormModal } from "@/features/assets/components/type-form-modal";
 import { isConflictError } from "@/lib/api/client";
-import { cn } from "@/lib/utils";
+import { useSiteMutations, useSites } from "@/features/sites/api";
+import { SiteFormModal } from "@/features/sites/components/site-form-modal";
 
 type ModalState =
   | { mode: "closed" }
   | { mode: "create" }
-  | { mode: "edit"; typeId: string; name: string; statusGroup: string };
+  | { mode: "edit"; siteId: string; name: string };
 
-export function AssetTypesSettingsPage() {
+export function SitesSettingsPage() {
   const t = useTranslations("Assets.settings");
-  const tTypes = useTranslations("Assets.settings.types");
+  const tSites = useTranslations("Assets.settings.sites");
   const tAssets = useTranslations("Assets");
 
-  const typesQuery = useAssetTypes({ limit: 100 });
-  const { createAssetType, updateAssetType, deleteAssetType } =
-    useAssetTypeMutations();
+  const sitesQuery = useSites({ limit: 100 });
+  const { createSite, updateSite, deleteSite } = useSiteMutations();
 
   const [modal, setModal] = useState<ModalState>({ mode: "closed" });
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
-  const assetTypes = typesQuery.data?.items ?? [];
-  const isLoading = typesQuery.isLoading;
-  const isError = typesQuery.isError;
+  const sites = sitesQuery.data?.items ?? [];
 
-  async function handleDelete(typeId: string) {
+  async function handleDelete(siteId: string) {
     setDeleteError(null);
     try {
-      await deleteAssetType.mutateAsync(typeId);
+      await deleteSite.mutateAsync(siteId);
     } catch (error) {
       setDeleteError(
-        isConflictError(error) ? tTypes("deleteBlocked") : tAssets("loadError"),
+        isConflictError(error) ? tSites("deleteBlocked") : tAssets("loadError"),
       );
     }
   }
@@ -57,9 +50,9 @@ export function AssetTypesSettingsPage() {
     >
       <div className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-heading-sm font-heading">{tTypes("manageTitle")}</h2>
+          <h2 className="text-heading-sm font-heading">{tSites("manageTitle")}</h2>
           <Button onClick={() => setModal({ mode: "create" })}>
-            {tTypes("createType")}
+            {tSites("createSite")}
           </Button>
         </div>
 
@@ -69,23 +62,26 @@ export function AssetTypesSettingsPage() {
           </p>
         ) : null}
 
-        {isLoading ? (
+        {sitesQuery.isLoading ? (
           <p className="px-4 py-10 text-center text-body-sm text-muted-foreground">
             {tAssets("loading")}
           </p>
-        ) : isError ? (
-          <p className="px-4 py-10 text-center text-body-sm text-destructive" role="alert">
+        ) : sitesQuery.isError ? (
+          <p
+            className="px-4 py-10 text-center text-body-sm text-destructive"
+            role="alert"
+          >
             {tAssets("loadError")}
           </p>
-        ) : assetTypes.length === 0 ? (
+        ) : sites.length === 0 ? (
           <div className="rounded-xl border border-border bg-card shadow-sm">
             <EmptyState
-              icon={<ClipboardList className="size-6" />}
-              title={tTypes("emptyTitle")}
-              description={tTypes("emptyDescription")}
+              icon={<MapPin className="size-6" />}
+              title={tSites("emptyTitle")}
+              description={tSites("emptyDescription")}
               action={
                 <Button onClick={() => setModal({ mode: "create" })}>
-                  {tTypes("createType")}
+                  {tSites("createSite")}
                 </Button>
               }
             />
@@ -99,37 +95,23 @@ export function AssetTypesSettingsPage() {
                     scope="col"
                     className="px-4 py-3 text-start font-medium text-muted-foreground"
                   >
-                    {tTypes("columns.name")}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-4 py-3 text-start font-medium text-muted-foreground"
-                  >
-                    {tTypes("columns.statusGroup")}
+                    {tSites("columns.name")}
                   </th>
                   <th
                     scope="col"
                     className="px-4 py-3 text-end font-medium text-muted-foreground"
                   >
-                    {tTypes("columns.actions")}
+                    {tSites("columns.actions")}
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {assetTypes.map((type) => (
+                {sites.map((site) => (
                   <tr
-                    key={type.id}
+                    key={site.id}
                     className="border-b border-border last:border-0 hover:bg-muted/50"
                   >
-                    <td className="px-4 py-3 font-medium">{type.name}</td>
-                    <td
-                      className={cn(
-                        "px-4 py-3",
-                        !type.statusGroup && "text-muted-foreground",
-                      )}
-                    >
-                      {type.statusGroup || "—"}
-                    </td>
+                    <td className="px-4 py-3 font-medium">{site.name}</td>
                     <td className="px-4 py-3">
                       <div className="flex justify-end gap-2">
                         <Button
@@ -139,22 +121,21 @@ export function AssetTypesSettingsPage() {
                           onClick={() =>
                             setModal({
                               mode: "edit",
-                              typeId: type.id,
-                              name: type.name,
-                              statusGroup: type.statusGroup,
+                              siteId: site.id,
+                              name: site.name,
                             })
                           }
                         >
-                          {tTypes("edit")}
+                          {tSites("edit")}
                         </Button>
                         <Button
                           type="button"
                           variant="outline"
                           size="sm"
-                          onClick={() => void handleDelete(type.id)}
-                          disabled={deleteAssetType.isPending}
+                          onClick={() => void handleDelete(site.id)}
+                          disabled={deleteSite.isPending}
                         >
-                          {tTypes("delete")}
+                          {tSites("delete")}
                         </Button>
                       </div>
                     </td>
@@ -166,22 +147,28 @@ export function AssetTypesSettingsPage() {
         )}
       </div>
 
-      <TypeFormModal
+      <SiteFormModal
         open={modal.mode !== "closed"}
         mode={modal.mode === "edit" ? "edit" : "create"}
         initialName={modal.mode === "edit" ? modal.name : ""}
-        initialStatusGroup={modal.mode === "edit" ? modal.statusGroup : ""}
         onClose={() => setModal({ mode: "closed" })}
-        onSubmit={async (name, statusGroup) => {
-          if (modal.mode === "create") {
-            await createAssetType.mutateAsync({ name, statusGroup });
-            return;
-          }
-          if (modal.mode === "edit") {
-            await updateAssetType.mutateAsync({
-              id: modal.typeId,
-              body: { name, statusGroup },
-            });
+        onSubmit={async (name) => {
+          try {
+            if (modal.mode === "create") {
+              await createSite.mutateAsync({ name });
+              return;
+            }
+            if (modal.mode === "edit") {
+              await updateSite.mutateAsync({
+                id: modal.siteId,
+                body: { name },
+              });
+            }
+          } catch (error) {
+            if (isConflictError(error)) {
+              throw new Error(tSites("nameTaken"));
+            }
+            throw new Error(tAssets("loadError"));
           }
         }}
       />
