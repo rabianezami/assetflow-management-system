@@ -1,4 +1,12 @@
-import { index, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
+import {
+  index,
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 import { organizations } from "./organizations";
 
@@ -18,7 +26,14 @@ export const sites = pgTable(
       .defaultNow()
       .$onUpdate(() => new Date().toISOString()),
   },
-  (table) => [index("sites_organization_id_idx").on(table.organizationId)],
+  (table) => [
+    index("sites_organization_id_idx").on(table.organizationId),
+    uniqueIndex("sites_org_name_lower_uidx").using(
+      "btree",
+      table.organizationId,
+      sql`lower(${table.name})`,
+    ),
+  ],
 );
 
 export type SiteRow = typeof sites.$inferSelect;

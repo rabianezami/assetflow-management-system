@@ -16,7 +16,7 @@ import {
   useAssetTypes,
 } from "@/features/assets/api";
 import { AssetIdentityHeader } from "@/features/assets/components/asset-identity-header";
-import { isConflictError } from "@/features/assets/lib/api-error";
+import { isConflictError } from "@/lib/api/client";
 import { getTypeName, isArchivedLifecycle } from "@/features/assets/lib/asset-helpers";
 import type { AssetStatus } from "@/features/assets/types/asset.types";
 import { Link, useRouter } from "@/i18n/navigation";
@@ -85,7 +85,7 @@ export function AssetDetailPageClient({ assetId }: AssetDetailPageProps) {
           displayName: asset.displayName,
           typeId: asset.typeId,
           status,
-          site: asset.site,
+          siteId: asset.siteId,
         },
       });
     } catch {

@@ -21,7 +21,7 @@ export const createAssetSchema = z.object({
   displayName: z.string().trim().optional(),
   typeId: z.string().uuid("typeId must be a valid UUID"),
   status: assetStatusSchema.default("active"),
-  site: z.string().trim().optional(),
+  siteId: z.string().uuid("siteId must be a valid UUID").optional().nullable(),
 });
 
 /** Full-replace body (not JSON Merge Patch). Clients must send every field. */
@@ -30,7 +30,7 @@ export const updateAssetSchema = z.object({
   displayName: z.string().trim().optional(),
   typeId: z.string().uuid("typeId must be a valid UUID"),
   status: assetStatusSchema,
-  site: z.string().trim().optional(),
+  siteId: z.string().uuid("siteId must be a valid UUID").optional().nullable(),
 });
 
 export const assetIdParamSchema = z.object({

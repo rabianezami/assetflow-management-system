@@ -19,6 +19,10 @@ export class ApiClientError extends Error {
   }
 }
 
+export function isConflictError(error: unknown): boolean {
+  return error instanceof ApiClientError && error.code === "CONFLICT";
+}
+
 function isApiErrorBody(value: unknown): value is ApiErrorBody {
   if (typeof value !== "object" || value === null || !("error" in value)) {
     return false;

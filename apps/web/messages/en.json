@@ -108,8 +108,9 @@
       "title": "Assets settings",
       "backToAssets": "Back to assets",
       "tabsLabel": "Settings sections",
+      "typesTab": "Types",
+      "sitesTab": "Sites",
       "types": {
-        "tab": "Types",
         "manageTitle": "Manage types",
         "createType": "+ Create type",
         "emptyTitle": "No asset types",
@@ -130,6 +131,28 @@
           "name": "Type name",
           "statusGroup": "Status group",
           "assetCount": "Assets",
+          "actions": "Actions"
+        }
+      },
+      "sites": {
+        "manageTitle": "Manage sites",
+        "createSite": "+ Create site",
+        "emptyTitle": "No sites",
+        "emptyDescription": "Create sites for your organization so assets can be assigned to a location.",
+        "createModalTitle": "Create a new site",
+        "editModalTitle": "Edit site",
+        "siteName": "Site name",
+        "siteNamePlaceholder": "Enter site name",
+        "cancel": "Cancel",
+        "create": "Create",
+        "save": "Save changes",
+        "edit": "Edit",
+        "delete": "Delete",
+        "deleteBlocked": "Cannot delete a site that has assets assigned. Reassign those assets first.",
+        "nameTaken": "A site with this name already exists.",
+        "saveFailed": "Could not save the site.",
+        "columns": {
+          "name": "Site name",
           "actions": "Actions"
         }
       }

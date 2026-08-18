@@ -11,7 +11,8 @@ import {
   type AssetFormValues,
 } from "@/features/assets/components/asset-form-fields";
 import { NoTypesGate } from "@/features/assets/components/no-types-gate";
-import { isConflictError } from "@/features/assets/lib/api-error";
+import { isConflictError } from "@/lib/api/client";
+import { useSites } from "@/features/sites/api";
 import { useRouter } from "@/i18n/navigation";
 import { Card } from "@repo/ui/card";
 
@@ -20,6 +21,7 @@ export function AddAssetFormPage() {
   const tAssets = useTranslations("Assets");
   const router = useRouter();
   const typesQuery = useAssetTypes({ limit: 100 });
+  const sitesQuery = useSites({ limit: 100 });
   const { createAsset } = useAssetMutations();
 
   const [values, setValues] = useState<AssetFormValues>({
@@ -27,11 +29,11 @@ export function AddAssetFormPage() {
     displayName: "",
     typeId: "",
     status: "active",
-    site: "",
+    siteId: "",
   });
   const [error, setError] = useState<string | null>(null);
 
-  if (typesQuery.isLoading) {
+  if (typesQuery.isLoading || sitesQuery.isLoading) {
     return (
       <p className="px-4 py-16 text-center text-body-sm text-muted-foreground">
         {tAssets("loading")}
@@ -39,7 +41,7 @@ export function AddAssetFormPage() {
     );
   }
 
-  if (typesQuery.isError) {
+  if (typesQuery.isError || sitesQuery.isError) {
     return (
       <p className="px-4 py-16 text-center text-body-sm text-destructive" role="alert">
         {tAssets("loadError")}
@@ -48,6 +50,7 @@ export function AddAssetFormPage() {
   }
 
   const assetTypes = typesQuery.data?.items ?? [];
+  const sites = sitesQuery.data?.items ?? [];
 
   if (assetTypes.length === 0) {
     return <NoTypesGate />;
@@ -63,7 +66,7 @@ export function AddAssetFormPage() {
         displayName: values.displayName || undefined,
         typeId: values.typeId,
         status: values.status,
-        site: values.site || undefined,
+        siteId: values.siteId || null,
       });
       router.push(`/assets/${asset.id}`);
     } catch (err) {
@@ -81,6 +84,7 @@ export function AddAssetFormPage() {
         <form onSubmit={(e) => void handleSubmit(e)} className="flex flex-col gap-5">
           <AssetFormFields
             assetTypes={assetTypes}
+            sites={sites}
             values={values}
             onChange={setValues}
           />

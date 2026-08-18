@@ -13,6 +13,7 @@ import { assetTypes } from "./asset-types";
 import { DEFAULT_ORGANIZATION_ID } from "./constants";
 import { assetLifecycleEnum, assetStatusEnum } from "./enums";
 import { organizations } from "./organizations";
+import { sites } from "./sites";
 
 export const assets = pgTable(
   "assets",
@@ -28,8 +29,9 @@ export const assets = pgTable(
       .notNull()
       .references(() => assetTypes.id),
     status: assetStatusEnum("status").notNull().default("active"),
-    /** Free-text site until Phase 3 Task 6 wires `sites`. */
+    /** Denormalized site name kept in sync from `siteId` (Task 6). */
     site: text("site").notNull().default(""),
+    siteId: uuid("site_id").references(() => sites.id),
     lifecycle: assetLifecycleEnum("lifecycle").notNull().default("active"),
     archivedAt: timestamp("archived_at", {
       withTimezone: true,
@@ -57,6 +59,7 @@ export const assets = pgTable(
     index("assets_lifecycle_idx").on(table.lifecycle),
     index("assets_type_id_idx").on(table.typeId),
     index("assets_organization_id_idx").on(table.organizationId),
+    index("assets_site_id_idx").on(table.siteId),
   ],
 );
 

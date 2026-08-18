@@ -119,8 +119,9 @@
       "title": "د شتمنۍ ترتیبات",
       "backToAssets": "شتمنیو ته بیرته",
       "tabsLabel": "د ترتیباتو برخې",
+      "typesTab": "ډولونه",
+      "sitesTab": "سایټونه",
       "types": {
-        "tab": "ډولونه",
         "manageTitle": "ډولونه مدیریت کړئ",
         "createType": "+ ډول جوړ کړئ",
         "emptyTitle": "د شتمنۍ ډول نشته",
@@ -141,6 +142,28 @@
           "name": "د ډول نوم",
           "statusGroup": "د حالت ډله",
           "assetCount": "شتمنۍ",
+          "actions": "کړنې"
+        }
+      },
+      "sites": {
+        "manageTitle": "سایټونه مدیریت کړئ",
+        "createSite": "+ سایټ جوړ کړئ",
+        "emptyTitle": "هیڅ سایټ نشته",
+        "emptyDescription": "د شتمنیو ځای ټاکلو لپاره د سازمان سایټونه جوړ کړئ.",
+        "createModalTitle": "نوی سایټ جوړ کړئ",
+        "editModalTitle": "سایټ سمول",
+        "siteName": "د سایټ نوم",
+        "siteNamePlaceholder": "د سایټ نوم ولیکئ",
+        "cancel": "لغوه",
+        "create": "جوړ کړئ",
+        "save": "بدلونونه خوندي کړئ",
+        "edit": "سمول",
+        "delete": "حذف",
+        "deleteBlocked": "سایټ چې شتمنۍ پکې دي نشي حذف کېدای. لومړی شتمنۍ لیږد کړئ.",
+        "nameTaken": "د دغه نوم سایټ دمخه شته.",
+        "saveFailed": "سایټ نشي خوندي کېدای.",
+        "columns": {
+          "name": "د سایټ نوم",
           "actions": "کړنې"
         }
       }

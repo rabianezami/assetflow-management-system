@@ -2,6 +2,7 @@ import {
   getDb,
   assets,
   assetTypes,
+  sites,
   type AssetRow,
 } from "@repo/db";
 import { and, count, desc, eq, sql, type SQL } from "drizzle-orm";
@@ -36,6 +37,30 @@ async function assertTypeExists(organizationId: string, typeId: string) {
       typeId,
     });
   }
+}
+
+async function resolveSiteFields(
+  organizationId: string,
+  siteId: string | null | undefined,
+): Promise<{ siteId: string | null; site: string }> {
+  if (!siteId) {
+    return { siteId: null, site: "" };
+  }
+
+  const db = getDb();
+  const [site] = await db
+    .select({ id: sites.id, name: sites.name })
+    .from(sites)
+    .where(
+      and(eq(sites.id, siteId), eq(sites.organizationId, organizationId)),
+    )
+    .limit(1);
+
+  if (!site) {
+    throw badRequest("siteId does not reference an existing site", { siteId });
+  }
+
+  return { siteId: site.id, site: site.name };
 }
 
 /** Rely on the DB partial unique index; map PG 23505 → API conflict. */
@@ -114,6 +139,7 @@ export async function createAsset(
   input: CreateAssetBody,
 ): Promise<AssetRow> {
   await assertTypeExists(organizationId, input.typeId);
+  const siteFields = await resolveSiteFields(organizationId, input.siteId);
 
   return withUniqueIdConflict(async () => {
     const db = getDb();
@@ -125,7 +151,8 @@ export async function createAsset(
         displayName: input.displayName?.trim() ?? "",
         typeId: input.typeId,
         status: input.status,
-        site: input.site?.trim() ?? "",
+        siteId: siteFields.siteId,
+        site: siteFields.site,
         lifecycle: "active",
         archivedAt: null,
         lastInspectionAt: null,
@@ -154,6 +181,7 @@ export async function updateAsset(
   }
 
   await assertTypeExists(organizationId, input.typeId);
+  const siteFields = await resolveSiteFields(organizationId, input.siteId);
 
   return withUniqueIdConflict(async () => {
     const db = getDb();
@@ -164,7 +192,8 @@ export async function updateAsset(
         displayName: input.displayName?.trim() ?? "",
         typeId: input.typeId,
         status: input.status,
-        site: input.site?.trim() ?? "",
+        siteId: siteFields.siteId,
+        site: siteFields.site,
       })
       .where(and(eq(assets.id, id), eq(assets.organizationId, organizationId)))
       .returning();
